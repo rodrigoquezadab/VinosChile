@@ -116,59 +116,59 @@ const CompareEngine = {
     const container = document.getElementById("compare-table-container");
     if (!modal || !container) return;
 
-    container.innerHTML = `
-      <div class="compare-grid" style="grid-template-columns: 180px repeat(${wines.length}, minmax(220px, 1fr));">
-        <!-- Columna de Etiquetas de Atributos -->
-        <div class="compare-col compare-labels-col">
-          <div class="compare-cell cell-header"><strong>Atributo</strong></div>
-          <div class="compare-cell"><strong>Botella / Etiqueta</strong></div>
-          <div class="compare-cell"><strong>Viña</strong></div>
-          <div class="compare-cell"><strong>Valle / D.O.</strong></div>
-          <div class="compare-cell"><strong>Zona</strong></div>
-          <div class="compare-cell"><strong>Variedad / Blend</strong></div>
-          <div class="compare-cell"><strong>Grado Alcohólico</strong></div>
-          <div class="compare-cell"><strong>Crianza</strong></div>
-          <div class="compare-cell"><strong>Puntaje Máximo</strong></div>
-          <div class="compare-cell"><strong>Puntajes Críticos</strong></div>
-          <div class="compare-cell"><strong>Temperatura</strong></div>
-          <div class="compare-cell"><strong>Decantación</strong></div>
-          <div class="compare-cell"><strong>Potencial de Guarda</strong></div>
-          <div class="compare-cell"><strong>Maridaje Clave</strong></div>
-          <div class="compare-cell"><strong>Rango de Precio</strong></div>
-        </div>
+    const rows = [
+      {
+        label: "Botella / Etiqueta",
+        render: (w) => `<div class="compare-cell compare-cell-image" style="justify-content: center;">
+          <img src="${w.bottleImage}" alt="${w.name}" style="max-height: 95px; width: auto; border-radius: 6px; border: 1px solid var(--border-glass);" onerror="this.src='assets/images/wines/almaviva.jpg'">
+        </div>`
+      },
+      { label: "Viña",               render: (w) => `<div class="compare-cell">${w.winery}</div>` },
+      { label: "Valle / D.O.",        render: (w) => `<div class="compare-cell">${w.valleyName}</div>` },
+      { label: "Zona",                render: (w) => `<div class="compare-cell"><span class="badge badge-gold">${w.zone}</span></div>` },
+      { label: "Variedad / Blend",    render: (w) => `<div class="compare-cell"><small>${w.blend}</small></div>` },
+      { label: "Grado Alcohólico",    render: (w) => `<div class="compare-cell">${w.alcohol}</div>` },
+      { label: "Crianza",             render: (w) => `<div class="compare-cell"><small>${w.aging}</small></div>` },
+      { label: "Puntaje Máximo",      render: (w) => `<div class="compare-cell"><span class="score-highlight">${w.topScore} Pts</span></div>` },
+      { label: "Puntajes Críticos",   render: (w) => `<div class="compare-cell"><div class="d-flex flex-wrap gap-1"><span class="badge badge-subtle">JS: ${w.scores.jamesSuckling}</span><span class="badge badge-subtle">Desc: ${w.scores.descorchados}</span><span class="badge badge-subtle">RP: ${w.scores.robertParker}</span></div></div>` },
+      { label: "Temperatura",         render: (w) => `<div class="compare-cell text-gold">${w.servingTemp}</div>` },
+      { label: "Decantación",         render: (w) => `<div class="compare-cell"><small>${w.decantTime}</small></div>` },
+      { label: "Potencial de Guarda", render: (w) => `<div class="compare-cell">${w.agingPotential}</div>` },
+      { label: "Maridaje Clave",      render: (w) => `<div class="compare-cell"><small>${w.pairings.slice(0, 2).join(", ")}</small></div>` },
+      { label: "Rango de Precio",     render: (w) => `<div class="compare-cell text-accent">${w.priceTier}</div>` },
+    ];
 
-        <!-- Columnas de Vinos -->
-        ${wines.map((w) => `
-          <div class="compare-col compare-wine-col">
-            <div class="compare-cell cell-header">
-              <button class="remove-compare-item-btn" onclick="CompareEngine.toggleCompare('${w.id}'); CompareEngine.openCompareModal();" title="Quitar">×</button>
-              <h4 class="compare-wine-name">${w.name}</h4>
-              <small class="text-gold font-serif">${w.vintage} • ${w.category}</small>
+    const numCols = wines.length + 1; // +1 for labels column
+
+    container.innerHTML = `
+      <div class="compare-table-wrapper">
+        <div class="compare-table" style="--compare-cols: ${wines.length};">
+
+          <!-- Fila de cabecera: nombre de los vinos -->
+          <div class="compare-row compare-row-header">
+            <div class="compare-label-cell compare-cell-header">
+              <strong>Atributo</strong>
             </div>
-            <div class="compare-cell text-center" style="justify-content: center; height: 110px;">
-              <img src="${w.bottleImage}" alt="${w.name}" style="max-height: 95px; width: auto; border-radius: 6px; border: 1px solid var(--border-glass);" onerror="this.src='assets/images/wines/almaviva.jpg'">
-            </div>
-            <div class="compare-cell">${w.winery}</div>
-            <div class="compare-cell">${w.valleyName}</div>
-            <div class="compare-cell"><span class="badge badge-gold">${w.zone}</span></div>
-            <div class="compare-cell"><small>${w.blend}</small></div>
-            <div class="compare-cell">${w.alcohol}</div>
-            <div class="compare-cell"><small>${w.aging}</small></div>
-            <div class="compare-cell"><span class="score-highlight">${w.topScore} Pts</span></div>
-            <div class="compare-cell">
-              <div class="d-flex flex-wrap gap-1">
-                <span class="badge badge-subtle">JS: ${w.scores.jamesSuckling}</span>
-                <span class="badge badge-subtle">Desc: ${w.scores.descorchados}</span>
-                <span class="badge badge-subtle">RP: ${w.scores.robertParker}</span>
+            ${wines.map((w) => `
+              <div class="compare-value-cell compare-cell-header">
+                <button class="remove-compare-item-btn" onclick="CompareEngine.toggleCompare('${w.id}'); CompareEngine.openCompareModal();" title="Quitar">×</button>
+                <h4 class="compare-wine-name">${w.name}</h4>
+                <small class="text-gold font-serif">${w.vintage} • ${w.category}</small>
               </div>
-            </div>
-            <div class="compare-cell text-gold">${w.servingTemp}</div>
-            <div class="compare-cell"><small>${w.decantTime}</small></div>
-            <div class="compare-cell">${w.agingPotential}</div>
-            <div class="compare-cell"><small>${w.pairings.slice(0, 2).join(", ")}</small></div>
-            <div class="compare-cell text-accent">${w.priceTier}</div>
+            `).join("")}
           </div>
-        `).join("")}
+
+          <!-- Filas de atributos -->
+          ${rows.map((row) => `
+            <div class="compare-row">
+              <div class="compare-label-cell">
+                <strong>${row.label}</strong>
+              </div>
+              ${wines.map((w) => row.render(w)).join("")}
+            </div>
+          `).join("")}
+
+        </div>
       </div>
     `;
 
