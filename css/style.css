@@ -1183,16 +1183,11 @@ a:hover {
   flex: 1;
 }
 
-/* Override para el comparador: sin padding, scroll vertical en el contenedor */
+/* ── Comparador: el contenedor scrollea en X e Y ── */
 #compare-table-container.modal-scrollable-body {
   padding: 0;
-  overflow-x: hidden; /* el scroll horizontal lo maneja .cmp-wines-pane */
+  overflow-x: auto;
   overflow-y: auto;
-}
-
-/* El cmp-layout ocupa toda la altura disponible */
-#compare-table-container .cmp-layout {
-  min-height: 100%;
 }
 
 /* Ficha de Vino en Modal */
@@ -1805,23 +1800,26 @@ a:hover {
    Las alturas de cada fila se sincronizan via valores fijos en JS (ROW_H)
    ========================================================================== */
 
-/* ── Contenedor principal: flex horizontal ── */
+/* ── Contenedor principal: flex horizontal, se expande al contenido ── */
 .cmp-layout {
   display: flex;
-  min-height: 0;
+  min-width: max-content; /* permite que el padre scrollee en X */
   font-family: var(--font-sans);
 }
 
-/* ── Panel izquierdo: etiquetas fijas, sin overflow ── */
+/* ── Panel izquierdo: sticky left con fondo OPACO ── */
 .cmp-label-pane {
-  flex: 0 0 148px;
-  width: 148px;
-  border-right: 2px solid var(--border-glass);
-  background: rgba(8, 6, 12, 0.85);
+  flex: 0 0 140px;
+  width: 140px;
+  border-right: 2px solid rgba(212,175,55,0.25);
+  /* Fondo completamente opaco para tapar el contenido que pasa por debajo */
+  background: #0D0B11;
   display: flex;
   flex-direction: column;
-  z-index: 2;
-  box-shadow: 4px 0 16px rgba(0,0,0,0.5);
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  box-shadow: 3px 0 20px rgba(0,0,0,0.8);
 }
 
 /* Celda cabecera del panel de etiquetas */
@@ -1875,19 +1873,15 @@ a:hover {
 
 .cmp-lp-cell:last-child { border-bottom: none; }
 
-/* ── Panel derecho: vinos con scroll horizontal ── */
+/* ── Panel derecho: columnas de vino, sin overflow propio ── */
 .cmp-wines-pane {
   flex: 1;
-  overflow-x: auto;
-  overflow-y: hidden; /* el scroll vertical lo maneja el contenedor padre */
-  min-width: 0;
+  /* sin overflow: el padre (.cmp-layout dentro de #compare-table-container) maneja el scroll */
 }
 
 /* Contenedor interno de columnas de vino (flex horizontal) */
 .cmp-wines-inner {
   display: flex;
-  min-width: max-content;
-  height: 100%;
 }
 
 /* ── Columna de un vino ── */
@@ -2598,4 +2592,57 @@ a:hover {
   .varieties-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+
+  /* Columnas de vino más anchas en desktop */
+  .cmp-wine-col { flex: 0 0 260px; width: 260px; }
+}
+
+/* ── Comparador responsivo en móvil ── */
+@media (max-width: 767px) {
+  /* Columna de etiquetas más angosta */
+  .cmp-label-pane {
+    flex: 0 0 96px;
+    width: 96px;
+  }
+
+  .cmp-lp-header {
+    font-size: 0.6rem;
+    gap: 0.2rem;
+  }
+
+  .cmp-header-icon { font-size: 1.1rem; }
+
+  .cmp-lp-divider {
+    font-size: 0.58rem;
+    padding: 0 0.5rem;
+    gap: 0.25rem;
+  }
+
+  .cmp-lp-divider span { font-size: 0.75rem; }
+
+  .cmp-lp-cell {
+    font-size: 0.68rem;
+    padding: 0 0.5rem;
+    line-height: 1.2;
+  }
+
+  /* Columnas de vino más angostas */
+  .cmp-wine-col { flex: 0 0 175px; width: 175px; }
+
+  .cmp-wine-name  { font-size: 0.82rem; }
+  .cmp-wine-meta  { font-size: 0.64rem; }
+  .cmp-wine-winery { font-size: 0.65rem; }
+
+  .cmp-wc-header  { padding: 0.6rem 0.7rem 0.6rem 0.8rem; }
+  .cmp-wc-cell    { padding: 0 0.65rem; }
+
+  .cmp-val-main   { font-size: 0.76rem; }
+  .cmp-val-sub    { font-size: 0.7rem; }
+  .cmp-val-gold   { font-size: 0.76rem; }
+
+  .cmp-top-score  { font-size: 1.4rem; }
+
+  .cmp-bottle-img { max-height: 110px; }
+
+  .cmp-score-num  { font-size: 0.78rem; min-width: 22px; }
 }
