@@ -1807,19 +1807,14 @@ a:hover {
   font-family: var(--font-sans);
 }
 
-/* ── Panel izquierdo: sticky left con fondo OPACO ── */
+/* ── Panel izquierdo: etiquetas, se desplaza con el resto ── */
 .cmp-label-pane {
   flex: 0 0 140px;
   width: 140px;
   border-right: 2px solid rgba(212,175,55,0.25);
-  /* Fondo completamente opaco para tapar el contenido que pasa por debajo */
   background: #0D0B11;
   display: flex;
   flex-direction: column;
-  position: sticky;
-  left: 0;
-  z-index: 10;
-  box-shadow: 3px 0 20px rgba(0,0,0,0.8);
 }
 
 /* Celda cabecera del panel de etiquetas */
