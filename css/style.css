@@ -1183,6 +1183,13 @@ a:hover {
   flex: 1;
 }
 
+/* Override para el comparador: scroll horizontal + sin padding lateral */
+#compare-table-container.modal-scrollable-body {
+  padding: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
 /* Ficha de Vino en Modal */
 .wine-modal-hero {
   margin-bottom: 1.5rem;
@@ -1787,83 +1794,261 @@ a:hover {
   font-weight: 700;
 }
 
-.compare-table-wrapper {
-  overflow-x: auto;
-  overflow-y: auto;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  background: var(--bg-surface);
+/* ── Wrapper principal ── */
+.cmp-wrapper {
+  --label-w: 150px;
+  --row-min-h: 52px;
+  font-family: var(--font-sans);
 }
 
-.compare-table {
-  display: table;
-  width: 100%;
-  border-collapse: collapse;
-  min-width: max-content;
-}
-
-.compare-row {
+/* ── Filas: grid con columna de etiqueta + N columnas de vino ── */
+.cmp-header-row,
+.cmp-row {
   display: grid;
-  grid-template-columns: 170px repeat(var(--compare-cols, 2), minmax(210px, 1fr));
+  grid-template-columns: var(--label-w) repeat(var(--cmp-cols, 2), minmax(200px, 1fr));
   border-bottom: 1px solid var(--border-subtle);
+  transition: background var(--transition-fast);
 }
 
-.compare-row:last-child {
-  border-bottom: none;
+.cmp-row:last-child { border-bottom: none; }
+
+.cmp-row:hover { background: rgba(255,255,255,0.025); }
+
+/* ── Cabecera de vino ── */
+.cmp-header-row {
+  background: linear-gradient(135deg, rgba(90,20,32,0.45) 0%, rgba(30,22,40,0.8) 100%);
+  border-bottom: 2px solid var(--border-glass);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-.compare-row-header {
-  background: rgba(90, 20, 32, 0.25);
+.cmp-header-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
-.compare-row:not(.compare-row-header):hover {
-  background: rgba(255, 255, 255, 0.03);
+.cmp-header-icon { font-size: 1.4rem; }
+
+.cmp-wine-header {
+  padding: 1rem 1rem 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  border-left: 1px solid var(--border-glass);
+  position: relative;
 }
 
-.compare-label-cell {
-  padding: 0.75rem;
-  font-size: 0.82rem;
+.cmp-wine-actions {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  display: flex;
+  gap: 0.3rem;
+}
+
+.cmp-fav-btn,
+.cmp-remove-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: rgba(255,255,255,0.06);
+  cursor: pointer;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
-  background: rgba(0, 0, 0, 0.4);
+  justify-content: center;
+  transition: all var(--transition-fast);
+  color: var(--text-muted);
+}
+
+.cmp-fav-btn:hover { background: rgba(212,175,55,0.2); border-color: var(--gold-primary); color: var(--gold-primary); }
+.cmp-fav-btn.is-fav { color: var(--gold-primary); border-color: var(--gold-primary); background: rgba(212,175,55,0.12); }
+.cmp-remove-btn:hover { background: rgba(158,43,62,0.25); border-color: var(--wine-bright); color: #fff; }
+
+.cmp-wine-name {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.3;
+  padding-right: 3.5rem;
+  margin-top: 0.1rem;
+}
+
+.cmp-wine-meta {
+  font-size: 0.72rem;
+  color: var(--gold-primary);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.cmp-wine-winery {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+/* ── Separador de sección ── */
+.cmp-section-divider {
+  display: grid;
+  grid-template-columns: var(--label-w) 1fr;
+  grid-column: 1 / -1;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-primary);
+  background: rgba(212, 175, 55, 0.07);
+  border-top: 1px solid rgba(212,175,55,0.15);
+  border-bottom: 1px solid rgba(212,175,55,0.08);
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.cmp-section-divider span { font-size: 0.95rem; }
+
+/* ── Celda de etiqueta (sticky left) ── */
+.cmp-label-col {
+  padding: 0.7rem 0.85rem;
+  font-size: 0.79rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  background: rgba(10, 8, 14, 0.55);
   position: sticky;
   left: 0;
-  z-index: 2;
+  z-index: 3;
   border-right: 1px solid var(--border-subtle);
+  backdrop-filter: blur(12px);
+  min-height: var(--row-min-h);
 }
 
-.compare-value-cell,
-.compare-cell {
-  padding: 0.75rem;
-  font-size: 0.82rem;
+/* ── Celda de valor ── */
+.cmp-value-col {
+  padding: 0.7rem 0.9rem;
   display: flex;
   align-items: center;
-  border-right: 1px solid var(--border-subtle);
+  border-left: 1px solid var(--border-subtle);
+  min-height: var(--row-min-h);
 }
 
-.compare-value-cell:last-child,
-.compare-cell:last-child {
-  border-right: none;
-}
-
-.compare-cell-image {
-  justify-content: center;
-  min-height: 120px;
-}
-
-.compare-cell-header,
-.compare-label-cell.compare-cell-header {
-  min-height: 90px;
-  background: rgba(90, 20, 32, 0.35);
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
-  align-items: flex-start;
-}
-
-.compare-label-cell.compare-cell-header {
+/* ── Botella ── */
+.cmp-bottle-wrap {
+  display: flex;
   align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.5rem 0;
 }
+
+.cmp-bottle-img {
+  max-height: 130px;
+  width: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-glass);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  transition: transform var(--transition-smooth);
+}
+
+.cmp-bottle-img:hover { transform: scale(1.06); }
+
+/* ── Valores de texto ── */
+.cmp-val-main {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.cmp-val-sub {
+  font-size: 0.79rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.cmp-val-gold {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--gold-primary);
+}
+
+/* ── Puntaje máximo destacado ── */
+.cmp-top-score {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--gold-primary);
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.2rem;
+}
+
+.cmp-top-score small {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+}
+
+/* ── Barra de score ── */
+.cmp-score-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.cmp-score-num {
+  font-size: 0.88rem;
+  font-weight: 700;
+  min-width: 28px;
+  font-family: var(--font-serif);
+}
+
+.cmp-score-bar {
+  flex: 1;
+  height: 5px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.cmp-score-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+
+.cmp-score-na { color: var(--text-dim); font-size: 0.8rem; }
+
+/* ── Badge de precio ── */
+.cmp-price-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0.7rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border: 1px solid currentColor;
+}
+
+.price-tier-1 { color: #78c17a; background: rgba(120,193,122,0.12); }
+.price-tier-2 { color: #D4AF37; background: rgba(212,175,55,0.12); }
+.price-tier-3 { color: #C87941; background: rgba(200,121,65,0.12); }
+.price-tier-4 { color: #E880B0; background: rgba(232,128,176,0.12); }
 
 .remove-compare-item-btn {
   position: absolute;
@@ -1881,6 +2066,33 @@ a:hover {
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--gold-primary);
+}
+
+/* ── Modal del comparador: más ancho ── */
+.compare-modal-sheet {
+  max-width: 1100px !important;
+}
+
+.compare-modal-header {
+  background: linear-gradient(135deg, rgba(20,14,26,0.95) 0%, rgba(40,28,52,0.95) 100%);
+  border-bottom: 1px solid var(--border-glass) !important;
+  padding: 0.85rem 1.5rem !important;
+}
+
+.compare-modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.compare-modal-icon {
+  font-size: 1.6rem;
+  filter: drop-shadow(0 0 8px rgba(212,175,55,0.4));
+}
+
+/* ── Sección divider que ocupa todo el ancho del grid ── */
+.cmp-section-divider {
+  grid-column: 1 / -1;
 }
 
 /* ==========================================================================

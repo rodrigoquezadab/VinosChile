@@ -534,9 +534,15 @@
   </div>
 
   <div id="compare-modal" class="modal-overlay" role="dialog" aria-modal="true">
-    <div class="modal-content-sheet" style="max-width: 1000px;">
-      <div class="modal-sheet-header">
-        <h3 class="font-serif text-gold" style="font-size: 1.15rem;" data-i18n="compare_modal_title">⚖️ Comparador Frente a Frente</h3>
+    <div class="modal-content-sheet compare-modal-sheet">
+      <div class="modal-sheet-header compare-modal-header">
+        <div class="compare-modal-title-wrap">
+          <span class="compare-modal-icon">⚖️</span>
+          <div>
+            <h3 class="font-serif text-gold" style="font-size: 1.1rem; margin:0;" data-i18n="compare_modal_title">Comparador Frente a Frente</h3>
+            <p style="font-size:0.72rem; color:var(--text-muted); margin:0;">Selecciona hasta 3 vinos para comparar lado a lado</p>
+          </div>
+        </div>
         <button id="close-compare-modal-btn" class="modal-close-btn" aria-label="Cerrar">&times;</button>
       </div>
       <div id="compare-table-container" class="modal-scrollable-body">
