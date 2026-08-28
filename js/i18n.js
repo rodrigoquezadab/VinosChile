@@ -1243,9 +1243,10 @@ const I18n = {
 
     container.innerHTML = `
       <div class="lang-selector-dropdown">
-        <button class="lang-selector-btn" id="lang-menu-trigger" aria-label="${this.t('lang_select_lbl')}" aria-expanded="false">
+        <button class="lang-selector-btn" id="lang-menu-trigger" aria-label="${this.t('lang_select_lbl')}" aria-expanded="false" title="Cambiar idioma / Change language">
+          <span class="lang-globe">🌐</span>
           <span class="lang-flag">${current.flag}</span>
-          <span class="lang-code">${current.code.toUpperCase()}</span>
+          <span class="lang-name-visible">${current.native}</span>
           <span class="lang-arrow">▾</span>
         </button>
         <div class="lang-dropdown-menu" id="lang-dropdown-menu">
@@ -1326,9 +1327,16 @@ const I18n = {
   }
 };
 
-// Exportar globalmente
+// Exportar globalmente y auto-inicializar
 if (typeof window !== "undefined") {
   window.I18n = I18n;
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      I18n.init();
+    });
+  } else {
+    I18n.init();
+  }
 }
 if (typeof module !== "undefined" && module.exports) {
   module.exports = I18n;
