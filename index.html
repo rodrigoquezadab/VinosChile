@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Terruño Chileno — Gran Enciclopedia & Guía Interactiva del Vino Chileno</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description"
+    content="Enciclopedia integral y guía interactiva de los vinos chilenos. Valles vitivinícolas georreferenciados, cepas nobles y patrimoniales, notas de cata, puntajes internacionales, maridajes del sommelier y directorio de viñas.">
+  <meta name="keywords"
+    content="Vinos Chilenos, Carménère, Cabernet Sauvignon, Valle del Maipo, Colchagua, Itata, Descorchados, Tim Atkin, James Suckling, VIGNO, MOVI, Maridaje, Sommelier">
+  <meta name="author" content="Terruño Chileno">
+  <meta name="theme-color" content="#0B090D">
+
+  <!-- Estilos Principales -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <!-- ==========================================================================
+       HEADER & TOP NAVIGATION
+       ========================================================================== -->
+  <header class="app-header">
+    <div class="container header-inner">
+      <a href="#" class="brand-logo" onclick="App.switchTab('catalog'); return false;">
+        <span class="brand-emblem">🍇</span>
+        <div>
+          <h1 class="brand-title">TERRUÑO CHILENO</h1>
+          <div class="brand-subtitle">Gran Enciclopedia del Vino</div>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Bar -->
+      <nav class="desktop-nav" aria-label="Navegación Principal">
+        <a href="#catalog" class="nav-link-desktop active" data-nav-tab="catalog">Catálogo & Vinos</a>
+        <a href="#map" class="nav-link-desktop" data-nav-tab="map">Valles & Mapa</a>
+        <a href="#varieties" class="nav-link-desktop" data-nav-tab="varieties">Bóveda de Cepas</a>
+        <a href="#sommelier" class="nav-link-desktop" data-nav-tab="sommelier">Sommelier & Maridaje</a>
+        <a href="#scores" class="nav-link-desktop" data-nav-tab="scores">Puntajes & Medallas</a>
+        <a href="#producers" class="nav-link-desktop" data-nav-tab="producers">Viñas & Tiendas</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       MAIN CONTENT CONTAINER
+       ========================================================================== -->
+  <main class="container">
+
+    <!-- Hero Banner -->
+    <header class="hero-banner">
+      <div class="hero-pill-badge">
+        <span>🇨🇱</span>
+        <span>Santuario Fitofiltro Mundial • Pie Franco Prefiloxérico</span>
+      </div>
+      <h2 class="hero-title">El Universo del <span>Vino Chileno</span></h2>
+      <p class="hero-description">
+        Desde el desierto costero de Atacama hasta la fría Patagonia austral. Explora terruños únicos, cepas históricas,
+        puntajes de la crítica internacional y maridajes perfectos.
+      </p>
+
+      <div class="hero-stats-row">
+        <div class="stat-box">
+          <span class="stat-num">115+</span>
+          <span class="stat-label">Vinos en Catálogo</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">29</span>
+          <span class="stat-label">Viñas Líderes & MOVI</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">17</span>
+          <span class="stat-label">Valles D.O. Oficiales</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">100</span>
+          <span class="stat-label">Pts Históricos JS</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ========================================================================
+         SECCIÓN 1: CATÁLOGO Y BUSCADOR DE VINOS
+         ======================================================================== -->
+    <section id="section-catalog" class="app-section active">
+      <div class="catalog-controls-bar">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="wine-search-input" class="search-input"
+            placeholder="Buscar por vino, viña, supermercado, botillería, valle o cepa..." autocomplete="off">
+        </div>
+        <button id="mobile-filter-toggle-btn" class="btn-filter-drawer-toggle">
+          <span>⚙️ Filtros Avanzados</span>
+        </button>
+      </div>
+
+      <!-- Quick Category Chips Bar -->
+      <div class="quick-category-chips-bar mb-3">
+        <button class="category-chip-btn active" data-style-filter="all">Todos los Vinos</button>
+        <button class="category-chip-btn" data-style-filter="Ícono / Vino de Culto">🏆 Íconos & Culto</button>
+        <button class="category-chip-btn" data-style-filter="Gran Reserva / Premium">⭐ Gran Reserva</button>
+        <button class="category-chip-btn" data-style-filter="Patrimonial / Natural / MOVI">🌿 Patrimoniales &
+          MOVI</button>
+        <button class="category-chip-btn" data-style-filter="Supermercado & Botillería Masivo">🛒 Supermercados &
+          Botillerías</button>
+        <button class="category-chip-btn" data-style-filter="Espumantes Chilenos">🥂 Espumantes</button>
+        <button class="category-chip-btn" data-style-filter="Clima Extremo / Desierto">🌵 Clima Extremo /
+          Desierto</button>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div id="catalog-wines-count" class="catalog-count-bar">Cargando catálogo...</div>
+        <button class="btn btn-sm btn-outline-gold" onclick="App.resetFilters()">Restablecer Todo</button>
+      </div>
+
+      <!-- Cuadrícula de Vinos -->
+      <div id="wines-catalog-grid" class="wines-grid">
+        <!-- Generado dinámicamente por app.js -->
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECCIÓN 2: MAPA INTERACTIVO Y TOPOGRAFÍA DE VALLES (ALTITUD & TERROIR)
+         ======================================================================== -->
+    <section id="section-map" class="app-section">
+      <div class="section-header">
+        <h2 class="section-title">Topografía, Altitud & Georreferenciación</h2>
+        <p class="section-subtitle">Explora la geografía vitivinícola de Chile: desde la brisa salina del Pacífico y la
+          Cordillera de la Costa hasta la Depresión Central y las cumbres andinas de más de 2.000 m.s.n.m.</p>
+      </div>
+
+      <!-- Perfil Topográfico Transversal Interactivo (Corte Este - Oeste) -->
+      <div class="topography-elevation-card glass-panel mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h3 class="section-subheading mb-0">🏔️ Corte Transversal de Topografía & Altitud de Chile</h3>
+          <span class="badge badge-gold">Decreto D.O. 2011: Costa • Entre Cordilleras • Andes</span>
+        </div>
+        <p class="text-light-muted mb-3" style="font-size: 0.85rem;">
+          La altitud y los 3 macro-relieves de Chile determinan las temperaturas, la radiación solar y la maduración de
+          las uvas:
+        </p>
+
+        <!-- Diagrama Gráfico del Perfil de Altitud -->
+        <div class="elevation-profile-diagram" id="elevation-profile-container">
+          <!-- Generado interactivamente por map.js -->
+        </div>
+
+        <div class="elevation-macro-zones-grid mt-3">
+          <div class="macro-zone-card zone-costa" onclick="TerroirMap.filterByMacroZone('Costa')">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span class="zone-icon">🌊</span>
+              <strong class="zone-name">COSTA (0 – 350 m.s.n.m.)</strong>
+            </div>
+            <p class="zone-desc">Brisa del Océano Pacífico y corriente fría de Humboldt. Neblina matinal
+              <em>Camanchaca</em> que preserva acidez y aromas cítricos/salinos.
+            </p>
+            <small class="text-gold">Valles: Leyda, Casablanca, Paredones, Huasco Costa, Limarí Talinay.</small>
+          </div>
+
+          <div class="macro-zone-card zone-central" onclick="TerroirMap.filterByMacroZone('Entre Cordilleras')">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span class="zone-icon">🌾</span>
+              <strong class="zone-name">ENTRE CORDILLERAS (100 – 450 m.s.n.m.)</strong>
+            </div>
+            <p class="zone-desc">Depresión Intermedia protegida. Máxima luminosidad solar y gran amplitud térmica
+              día/noche (+18°C) para maduración óptima de tintos.</p>
+            <small class="text-gold">Valles: Peumo (Cachapoal), Apalta (Colchagua), Maipo Llano, Curicó, Maule.</small>
+          </div>
+
+          <div class="macro-zone-card zone-andes" onclick="TerroirMap.filterByMacroZone('Andes')">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span class="zone-icon">🏔️</span>
+              <strong class="zone-name">ANDES & ALTA MONTAÑA (450 – 2.200+ m.s.n.m.)</strong>
+            </div>
+            <p class="zone-desc">Terrazas aluviales al pie de la cordillera. Vientos catabáticos fríos nocturnos
+              (<em>Viento Raco</em>) que dan taninos finos y elegancia aristocrática.</p>
+            <small class="text-gold">Valles: Puente Alto, Pirque, Los Lingues, Alcohuaz (2.200m), Huasco Alto
+              (1.800m).</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtros del Mapa -->
+      <div class="glass-panel p-3 mb-4 d-flex flex-wrap gap-2 align-items-center" style="padding: 1rem;">
+        <div style="flex: 1; min-width: 160px;">
+          <label class="filter-label">Macro-Región Vitivinícola:</label>
+          <select id="map-region-filter" class="form-select-custom">
+            <option value="all">Todas las Regiones</option>
+            <option value="Atacama">Región de Atacama (Desierto & Altura)</option>
+            <option value="Coquimbo">Región de Coquimbo (Elqui, Limarí, Choapa)</option>
+            <option value="Aconcagua">Región de Aconcagua (Casablanca, Leyda, Zapallar)</option>
+            <option value="Valle Central">Región del Valle Central (Maipo, Cachapoal, Colchagua, Curicó, Maule)</option>
+            <option value="Región del Sur">Región del Sur (Itata, Bío Bío, Malleco)</option>
+            <option value="Región Austral">Región Austral / Lagos & Patagonia</option>
+          </select>
+        </div>
+        <div style="flex: 1; min-width: 160px;">
+          <label class="filter-label">Topografía & Altitud D.O.:</label>
+          <select id="map-zone-filter" class="form-select-custom">
+            <option value="all">Todas las Zonas y Alturas</option>
+            <option value="Costa">🌊 Costa &amp; Influencia Marina (0 – 350 msnm)</option>
+            <option value="Entre Cordilleras">🌾 Entre Cordilleras / Depresión Central (100 – 450 msnm)</option>
+            <option value="Andes">🏔️ Andes &amp; Alta Montaña (450 – 2.200+ msnm)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Layout Mapa & Lista de Valles -->
+      <div class="map-view-layout">
+        <!-- Mapa SVG Topográfico de Chile -->
+        <div class="map-visual-container glass-panel">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h4 class="section-subheading mb-0">🗺️ Mapa Topográfico Vitivinícola</h4>
+            <span class="badge badge-subtle">17 Valles Georreferenciados</span>
+          </div>
+          <p class="text-light-muted mb-3" style="font-size: 0.8rem;">
+            Haz clic en cualquier punto para abrir su ficha técnica enológica y altitud exacta.
+          </p>
+          <div id="chile-interactive-svg"></div>
+        </div>
+
+        <!-- Tarjetas de Valles -->
+        <div id="valleys-cards-container">
+          <!-- Generado dinámicamente por map.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECCIÓN 3: BÓVEDA DE CEPAS Y VARIEDADES DE UVA
+         ======================================================================== -->
+    <section id="section-varieties" class="app-section">
+      <div class="section-header">
+        <h2 class="section-title">Bóveda de Cepas Nobles y Ancestrales</h2>
+        <p class="section-subtitle">Conoce a fondo las variedades que dan vida al vino chileno: historia, escalas
+          organolépticas y aromas.</p>
+      </div>
+
+      <div id="varieties-container" class="varieties-grid">
+        <!-- Generado dinámicamente por app.js -->
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECCIÓN 4: ASISTENTE SOMMELIER Y MARIDAJES
+         ======================================================================== -->
+    <section id="section-sommelier" class="app-section">
+      <div class="section-header">
+        <h2 class="section-title">Asistente Sommelier & Maridaje Inteligente</h2>
+        <p class="section-subtitle">Descubre la armonía perfecta entre la gastronomía chilena e internacional y los
+          vinos del país.</p>
+      </div>
+
+      <!-- Calculadora de Temperatura de Servicio -->
+      <div class="sommelier-calculator-card glass-panel">
+        <h3 class="section-subheading">🌡️ Calculadora de Servicio, Temperatura & Cristalería</h3>
+        <p class="text-light-muted mb-3" style="font-size: 0.88rem;">Selecciona el estilo de vino para obtener la
+          temperatura precisa, tiempo de enfriado y copa sugerida.</p>
+
+        <div class="d-flex flex-wrap gap-2">
+          <div style="flex: 1; min-width: 200px;">
+            <select id="temp-wine-type" class="form-select-custom" onchange="SommelierEngine.calculateServingAdvice()">
+              <option value="tinto_robusto">Tinto Robusto (Cabernet, Carménère, Gran Reserva, Ícono)</option>
+              <option value="tinto_ligero">Tinto Ligero & Jugoso (Pinot Noir, Cepa País, Cinsault)</option>
+              <option value="blanco_madera">Blanco con Crianza en Barrica (Chardonnay Gran Reserva)</option>
+              <option value="blanco_mineral">Blanco Fresco & Mineral (Sauvignon Blanc, Riesling)</option>
+              <option value="espumante">Espumante Método Tradicional / Extra Brut</option>
+              <option value="naranjo">Vino Naranjo / Ancestral con Pieles</option>
+              <option value="late_harvest">Cosecha Tardía (Late Harvest) / Fortificado</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="temp-calc-result">
+          <!-- Salida generada por sommelier.js -->
+        </div>
+      </div>
+
+      <!-- Buscador y Selector de Platos -->
+      <div class="d-flex flex-wrap gap-2 mb-4">
+        <div style="flex: 1; min-width: 220px;">
+          <input type="text" id="dish-search-input" class="search-input"
+            placeholder="Buscar por plato o ingrediente (ej: Cordero, Pastel de Choclo, Ceviche)...">
+        </div>
+        <div style="min-width: 180px;">
+          <select id="pairing-category-select" class="form-select-custom">
+            <option value="all">Todas las Categorías Culinarias</option>
+            <option value="Gastronomía Chilena Tradicional">Gastronomía Chilena Tradicional</option>
+            <option value="Carnes Rojas">Carnes Rojas & Parrilla</option>
+            <option value="Mariscos">Mariscos & Pescados</option>
+            <option value="Quesos">Aperitivos & Quesos</option>
+            <option value="Postres">Postres & Chocolates</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="pairings-cards-container">
+        <!-- Generado dinámicamente por sommelier.js -->
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECCIÓN 5: GUÍA DE PUNTAJES, MEDALLAS Y SISTEMAS DE MEDICIÓN
+         ======================================================================== -->
+    <section id="section-scores" class="app-section">
+      <div class="section-header">
+        <h2 class="section-title">Sistemas de Medición, Puntajes y Medallas</h2>
+        <p class="section-subtitle">Comprende cómo los críticos y jurados más prestigiosos evalúan y premian los vinos
+          chilenos.</p>
+      </div>
+
+      <div id="scores-guide-container">
+        <!-- Generado dinámicamente por app.js -->
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECCIÓN 6: DIRECTORIO DE VIÑAS, PRODUCTORES Y TIENDAS
+         ======================================================================== -->
+    <section id="section-producers" class="app-section">
+      <div class="section-header">
+        <h2 class="section-title">Viñas Emblemáticas, Productores y Dónde Comprar</h2>
+        <p class="section-subtitle">Directorio de bodegas patrimoniales, viñateros independientes (MOVI, VIGNO) y
+          tiendas autorizadas en Chile.</p>
+      </div>
+
+      <h3 class="section-subheading mb-3">🏰 Bodegas & Proyectos Enológicos</h3>
+      <div id="producers-wineries-grid" class="wines-grid mb-5">
+        <!-- Generado dinámicamente por app.js -->
+      </div>
+
+      <h3 class="section-subheading mb-3">🛒 Tiendas Especializadas & Dónde Comprar en Chile</h3>
+      <div id="producers-retailers-grid" class="wines-grid">
+        <!-- Generado dinámicamente por app.js -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       DRAWER LATERAL DE FILTROS (MOBILE & DESKTOP)
+       ========================================================================== -->
+  <aside id="filters-drawer" class="filters-drawer">
+    <div class="drawer-header">
+      <h3 class="font-serif text-gold">Filtros de Búsqueda</h3>
+      <button id="close-drawer-btn" class="drawer-close-btn">&times;</button>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label" for="filter-channel">Canal de Compra / Dónde Comprar</label>
+      <select id="filter-channel" class="filter-select">
+        <option value="all">Todos los Canales</option>
+        <option value="Supermercados">🛒 Supermercados (Diez, Jumbo, Líder, Tottus, Unimarc)</option>
+        <option value="Tienda Especializada">🍷 Tiendas Especializadas (Mundo del Vino, La CAV, La Vinoteca)</option>
+        <option value="Botillerías Mayoristas">🏪 Botillerías Mayoristas & Delivery (El Cielo, Booz.cl)</option>
+        <option value="Venta Directa">🏰 Venta Directa de Viña (Descorcha, Santa Rita Online)</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label" for="filter-price">💵 Rango de Precio (CLP)</label>
+      <select id="filter-price" class="filter-select">
+        <option value="all">Todos los Precios</option>
+        <option value="under_5k">Menos de $5.000 CLP (Económico Masivo)</option>
+        <option value="5k_12k">$5.000 - $12.000 CLP (Reserva &amp; Supermercado)</option>
+        <option value="12k_25k">$12.000 - $25.000 CLP (Gran Reserva / Clásicos)</option>
+        <option value="25k_60k">$25.000 - $60.000 CLP (Alta Gama &amp; Vinos de Autor)</option>
+        <option value="over_60k">Más de $60.000 CLP (Vinos Ícono &amp; Culto)</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label" for="filter-style">Estilo / Segmento</label>
+      <select id="filter-style" class="filter-select">
+        <option value="all">Todos los Estilos</option>
+        <option value="Ícono / Vino de Culto">🏆 Íconos &amp; Vinos de Culto</option>
+        <option value="Gran Reserva / Premium">⭐ Gran Reserva &amp; Premium</option>
+        <option value="Patrimonial / Natural / MOVI">🌿 Patrimoniales, Campesinos &amp; MOVI</option>
+        <option value="Supermercado &amp; Botillería Masivo">🛒 Supermercados &amp; Botillerías Populares</option>
+        <option value="Espumantes Chilenos">🥂 Espumantes con D.O.</option>
+        <option value="Clima Extremo / Desierto">🌵 Clima Extremo / Desierto</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label" for="filter-valley">Valle Vitivinícola</label>
+      <select id="filter-valley" class="filter-select">
+        <!-- Poblado dinámicamente -->
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label" for="filter-grape">Cepa / Variedad</label>
+      <select id="filter-grape" class="filter-select">
+        <!-- Poblado dinámicamente -->
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label" for="filter-type">Tipo de Vino</label>
+      <select id="filter-type" class="filter-select">
+        <option value="all">Todos los Tipos</option>
+        <option value="Tinto">Tinto</option>
+        <option value="Blanco">Blanco</option>
+        <option value="Naranjo">Naranjo</option>
+        <option value="Espumante">Espumante</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label" for="filter-score">Puntaje Mínimo de Críticos</label>
+      <select id="filter-score" class="filter-select">
+        <option value="0">Cualquier Puntaje</option>
+        <option value="90">90+ Puntos (Excelente)</option>
+        <option value="94">94+ Puntos (Sobresaliente)</option>
+        <option value="96">96+ Puntos (Extraordinario)</option>
+        <option value="98">98-100 Puntos (Ícono Supremo)</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="checkbox-label">
+        <input type="checkbox" id="filter-organic">
+        <span>🌿 Orgánico / Biodinámico / Natural</span>
+      </label>
+    </div>
+
+    <div class="filter-group">
+      <label class="checkbox-label">
+        <input type="checkbox" id="filter-favorites">
+        <span>⭐ Solo Vinos Guardados en Favoritos</span>
+      </label>
+    </div>
+
+    <div class="mt-4">
+      <button class="btn btn-primary btn-block mb-2"
+        onclick="document.getElementById('filters-drawer').classList.remove('active')">
+        Aplicar Filtros
+      </button>
+      <button class="btn btn-secondary btn-block" onclick="App.resetFilters()">
+        Restablecer Todo
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       MODAL BOTTOM SHEET: FICHA DETALLADA DE VINO
+       ========================================================================== -->
+  <div id="wine-modal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content-sheet">
+      <div class="modal-sheet-header">
+        <span class="sheet-handle"></span>
+        <button id="close-wine-modal-btn" class="modal-close-btn" aria-label="Cerrar">&times;</button>
+      </div>
+      <div id="wine-modal-body" class="modal-scrollable-body">
+        <!-- Renderizado dinámicamente por app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL BOTTOM SHEET: FICHA DETALLADA DE VALLE
+       ========================================================================== -->
+  <div id="valley-modal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content-sheet">
+      <div class="modal-sheet-header">
+        <span class="sheet-handle"></span>
+        <button id="close-valley-modal-btn" class="modal-close-btn" aria-label="Cerrar">&times;</button>
+      </div>
+      <div id="valley-modal-body" class="modal-scrollable-body">
+        <!-- Renderizado dinámicamente por map.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       BARRA FLOTANTE Y MODAL DE COMPARACIÓN LADO A LADO
+       ========================================================================== -->
+  <div id="compare-floating-bar" class="compare-floating-bar">
+    <span class="compare-count-badge" id="compare-count">0</span>
+    <span style="font-size: 0.85rem; font-weight: 600; color: #FFF;">Vinos en Comparador</span>
+    <button class="btn btn-sm btn-primary" onclick="CompareEngine.openCompareModal()">Comparar →</button>
+    <button class="btn btn-sm btn-secondary" onclick="CompareEngine.clearCompare()">Limpiar</button>
+  </div>
+
+  <div id="compare-modal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content-sheet" style="max-width: 1000px;">
+      <div class="modal-sheet-header">
+        <h3 class="font-serif text-gold" style="font-size: 1.15rem;">⚖️ Comparador Frente a Frente</h3>
+        <button id="close-compare-modal-btn" class="modal-close-btn" aria-label="Cerrar">&times;</button>
+      </div>
+      <div id="compare-table-container" class="modal-scrollable-body">
+        <!-- Renderizado dinámicamente por compare.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MOBILE BOTTOM NAVIGATION BAR (FIJA)
+       ========================================================================== -->
+  <nav class="mobile-bottom-nav" aria-label="Navegación Móvil Inferior">
+    <button class="nav-tab-btn active" data-nav-tab="catalog">
+      <span class="nav-tab-icon">🍷</span>
+      <span class="nav-tab-label">Vinos</span>
+    </button>
+    <button class="nav-tab-btn" data-nav-tab="map">
+      <span class="nav-tab-icon">🗺️</span>
+      <span class="nav-tab-label">Valles</span>
+    </button>
+    <button class="nav-tab-btn" data-nav-tab="varieties">
+      <span class="nav-tab-icon">🍇</span>
+      <span class="nav-tab-label">Cepas</span>
+    </button>
+    <button class="nav-tab-btn" data-nav-tab="sommelier">
+      <span class="nav-tab-icon">🤵</span>
+      <span class="nav-tab-label">Sommelier</span>
+    </button>
+    <button class="nav-tab-btn" data-nav-tab="scores">
+      <span class="nav-tab-icon">🏆</span>
+      <span class="nav-tab-label">Puntajes</span>
+    </button>
+    <button class="nav-tab-btn" data-nav-tab="producers">
+      <span class="nav-tab-icon">🏰</span>
+      <span class="nav-tab-label">Viñas</span>
+    </button>
+  </nav>
+
+  <!-- Notificaciones Toast -->
+  <div id="app-toast" class="app-toast"></div>
+
+  <!-- Scripts de Datos -->
+  <script src="js/data/valleys.js"></script>
+  <script src="js/data/varieties.js"></script>
+  <script src="js/data/scores.js"></script>
+  <script src="js/data/pairings.js"></script>
+  <script src="js/data/producers.js"></script>
+  <script src="js/data/wines.js"></script>
+
+  <!-- Scripts de Módulos y Lógica -->
+  <script src="js/map.js"></script>
+  <script src="js/sommelier.js"></script>
+  <script src="js/compare.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    // Inicializar asesor de servicio por defecto
+    window.addEventListener('load', () => {
+      if (typeof SommelierEngine !== 'undefined') {
+        SommelierEngine.calculateServingAdvice();
+      }
+    });
+  </script>
+
+</body>
+
+</html>
