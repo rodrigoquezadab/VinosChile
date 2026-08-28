@@ -28,20 +28,25 @@
       <a href="#" class="brand-logo" onclick="App.switchTab('catalog'); return false;">
         <span class="brand-emblem">🍇</span>
         <div>
-          <h1 class="brand-title">TERRUÑO CHILENO</h1>
-          <div class="brand-subtitle">Gran Enciclopedia del Vino</div>
+          <h1 class="brand-title" data-i18n="brand_title">TERRUÑO CHILENO</h1>
+          <div class="brand-subtitle" data-i18n="brand_subtitle">Gran Enciclopedia del Vino</div>
         </div>
       </a>
 
-      <!-- Desktop Navigation Bar -->
-      <nav class="desktop-nav" aria-label="Navegación Principal">
-        <a href="#catalog" class="nav-link-desktop active" data-nav-tab="catalog">Catálogo & Vinos</a>
-        <a href="#map" class="nav-link-desktop" data-nav-tab="map">Valles & Mapa</a>
-        <a href="#varieties" class="nav-link-desktop" data-nav-tab="varieties">Bóveda de Cepas</a>
-        <a href="#sommelier" class="nav-link-desktop" data-nav-tab="sommelier">Sommelier & Maridaje</a>
-        <a href="#scores" class="nav-link-desktop" data-nav-tab="scores">Puntajes & Medallas</a>
-        <a href="#producers" class="nav-link-desktop" data-nav-tab="producers">Viñas & Tiendas</a>
-      </nav>
+      <div class="header-actions">
+        <!-- Desktop Navigation Bar -->
+        <nav class="desktop-nav" aria-label="Navegación Principal">
+          <a href="#catalog" class="nav-link-desktop active" data-nav-tab="catalog" data-i18n="nav_catalog">Catálogo & Vinos</a>
+          <a href="#map" class="nav-link-desktop" data-nav-tab="map" data-i18n="nav_map">Valles & Mapa</a>
+          <a href="#varieties" class="nav-link-desktop" data-nav-tab="varieties" data-i18n="nav_varieties">Bóveda de Cepas</a>
+          <a href="#sommelier" class="nav-link-desktop" data-nav-tab="sommelier" data-i18n="nav_sommelier">Sommelier & Maridaje</a>
+          <a href="#scores" class="nav-link-desktop" data-nav-tab="scores" data-i18n="nav_scores">Puntajes & Medallas</a>
+          <a href="#producers" class="nav-link-desktop" data-nav-tab="producers" data-i18n="nav_producers">Viñas & Tiendas</a>
+        </nav>
+
+        <!-- Mount point para el selector de idioma -->
+        <div id="language-selector-mount" class="language-selector-wrapper"></div>
+      </div>
     </div>
   </header>
 
@@ -54,30 +59,30 @@
     <header class="hero-banner">
       <div class="hero-pill-badge">
         <span>🇨🇱</span>
-        <span>Santuario Fitofiltro Mundial • Pie Franco Prefiloxérico</span>
+        <span data-i18n="hero_badge">Santuario Fitofiltro Mundial • Pie Franco Prefiloxérico</span>
       </div>
-      <h2 class="hero-title">El Universo del <span>Vino Chileno</span></h2>
-      <p class="hero-description">
+      <h2 class="hero-title"><span data-i18n="hero_title_prefix">El Universo del </span><span data-i18n="hero_title_highlight">Vino Chileno</span></h2>
+      <p class="hero-description" data-i18n="hero_description">
         Desde el desierto costero de Atacama hasta la fría Patagonia austral. Explora terruños únicos, cepas históricas,
         puntajes de la crítica internacional y maridajes perfectos.
       </p>
 
       <div class="hero-stats-row">
         <div class="stat-box">
-          <span class="stat-num">115+</span>
-          <span class="stat-label">Vinos en Catálogo</span>
+          <span class="stat-num" data-i18n="stat_wines_num">115+</span>
+          <span class="stat-label" data-i18n="stat_wines_label">Vinos en Catálogo</span>
         </div>
         <div class="stat-box">
-          <span class="stat-num">29</span>
-          <span class="stat-label">Viñas Líderes & MOVI</span>
+          <span class="stat-num" data-i18n="stat_producers_num">29</span>
+          <span class="stat-label" data-i18n="stat_producers_label">Viñas Líderes & MOVI</span>
         </div>
         <div class="stat-box">
-          <span class="stat-num">17</span>
-          <span class="stat-label">Valles D.O. Oficiales</span>
+          <span class="stat-num" data-i18n="stat_valleys_num">17</span>
+          <span class="stat-label" data-i18n="stat_valleys_label">Valles D.O. Oficiales</span>
         </div>
         <div class="stat-box">
-          <span class="stat-num">100</span>
-          <span class="stat-label">Pts Históricos JS</span>
+          <span class="stat-num" data-i18n="stat_scores_num">100</span>
+          <span class="stat-label" data-i18n="stat_scores_label">Pts Históricos JS</span>
         </div>
       </div>
     </header>
@@ -90,30 +95,28 @@
         <div class="search-input-wrapper">
           <span class="search-icon">🔍</span>
           <input type="text" id="wine-search-input" class="search-input"
-            placeholder="Buscar por vino, viña, supermercado, botillería, valle o cepa..." autocomplete="off">
+            placeholder="Buscar por vino, viña, supermercado, botillería, valle o cepa..."
+            data-i18n-placeholder="search_placeholder" autocomplete="off">
         </div>
         <button id="mobile-filter-toggle-btn" class="btn-filter-drawer-toggle">
-          <span>⚙️ Filtros Avanzados</span>
+          <span data-i18n="filters_btn">⚙️ Filtros Avanzados</span>
         </button>
       </div>
 
       <!-- Quick Category Chips Bar -->
       <div class="quick-category-chips-bar mb-3">
-        <button class="category-chip-btn active" data-style-filter="all">Todos los Vinos</button>
-        <button class="category-chip-btn" data-style-filter="Ícono / Vino de Culto">🏆 Íconos & Culto</button>
-        <button class="category-chip-btn" data-style-filter="Gran Reserva / Premium">⭐ Gran Reserva</button>
-        <button class="category-chip-btn" data-style-filter="Patrimonial / Natural / MOVI">🌿 Patrimoniales &
-          MOVI</button>
-        <button class="category-chip-btn" data-style-filter="Supermercado & Botillería Masivo">🛒 Supermercados &
-          Botillerías</button>
-        <button class="category-chip-btn" data-style-filter="Espumantes Chilenos">🥂 Espumantes</button>
-        <button class="category-chip-btn" data-style-filter="Clima Extremo / Desierto">🌵 Clima Extremo /
-          Desierto</button>
+        <button class="category-chip-btn active" data-style-filter="all" data-i18n="chip_all">Todos los Vinos</button>
+        <button class="category-chip-btn" data-style-filter="Ícono / Vino de Culto" data-i18n="chip_icons">🏆 Íconos & Culto</button>
+        <button class="category-chip-btn" data-style-filter="Gran Reserva / Premium" data-i18n="chip_gran_reserva">⭐ Gran Reserva</button>
+        <button class="category-chip-btn" data-style-filter="Patrimonial / Natural / MOVI" data-i18n="chip_patrimonial">🌿 Patrimoniales & MOVI</button>
+        <button class="category-chip-btn" data-style-filter="Supermercado & Botillería Masivo" data-i18n="chip_supermarket">🛒 Supermercados & Botillerías</button>
+        <button class="category-chip-btn" data-style-filter="Espumantes Chilenos" data-i18n="chip_sparkling">🥂 Espumantes</button>
+        <button class="category-chip-btn" data-style-filter="Clima Extremo / Desierto" data-i18n="chip_desert">🌵 Clima Extremo / Desierto</button>
       </div>
 
       <div class="d-flex justify-content-between align-items-center mb-3">
         <div id="catalog-wines-count" class="catalog-count-bar">Cargando catálogo...</div>
-        <button class="btn btn-sm btn-outline-gold" onclick="App.resetFilters()">Restablecer Todo</button>
+        <button class="btn btn-sm btn-outline-gold" onclick="App.resetFilters()" data-i18n="reset_filters_btn">Restablecer Todo</button>
       </div>
 
       <!-- Cuadrícula de Vinos -->
@@ -345,102 +348,102 @@
        ========================================================================== -->
   <aside id="filters-drawer" class="filters-drawer">
     <div class="drawer-header">
-      <h3 class="font-serif text-gold">Filtros de Búsqueda</h3>
+      <h3 class="font-serif text-gold" data-i18n="filter_drawer_title">Filtros de Búsqueda</h3>
       <button id="close-drawer-btn" class="drawer-close-btn">&times;</button>
     </div>
 
     <div class="filter-group">
-      <label class="filter-label" for="filter-channel">Canal de Compra / Dónde Comprar</label>
+      <label class="filter-label" for="filter-channel" data-i18n="filter_channel_lbl">Canal de Compra / Dónde Comprar</label>
       <select id="filter-channel" class="filter-select">
-        <option value="all">Todos los Canales</option>
-        <option value="Supermercados">🛒 Supermercados (Diez, Jumbo, Líder, Tottus, Unimarc)</option>
-        <option value="Tienda Especializada">🍷 Tiendas Especializadas (Mundo del Vino, La CAV, La Vinoteca)</option>
-        <option value="Botillerías Mayoristas">🏪 Botillerías Mayoristas & Delivery (El Cielo, Booz.cl)</option>
-        <option value="Venta Directa">🏰 Venta Directa de Viña (Descorcha, Santa Rita Online)</option>
+        <option value="all" data-i18n="filter_channel_all">Todos los Canales</option>
+        <option value="Supermercados" data-i18n="filter_channel_super">🛒 Supermercados (Diez, Jumbo, Líder, Tottus, Unimarc)</option>
+        <option value="Tienda Especializada" data-i18n="filter_channel_spec">🍷 Tiendas Especializadas (Mundo del Vino, La CAV, La Vinoteca)</option>
+        <option value="Botillerías Mayoristas" data-i18n="filter_channel_boti">🏪 Botillerías Mayoristas & Delivery (El Cielo, Booz.cl)</option>
+        <option value="Venta Directa" data-i18n="filter_channel_direct">🏰 Venta Directa de Viña (Descorcha, Santa Rita Online)</option>
       </select>
     </div>
 
     <div class="filter-group">
-      <label class="filter-label" for="filter-price">💵 Rango de Precio (CLP)</label>
+      <label class="filter-label" for="filter-price" data-i18n="filter_price_lbl">💵 Rango de Precio (CLP)</label>
       <select id="filter-price" class="filter-select">
-        <option value="all">Todos los Precios</option>
-        <option value="under_5k">Menos de $5.000 CLP (Económico Masivo)</option>
-        <option value="5k_12k">$5.000 - $12.000 CLP (Reserva &amp; Supermercado)</option>
-        <option value="12k_25k">$12.000 - $25.000 CLP (Gran Reserva / Clásicos)</option>
-        <option value="25k_60k">$25.000 - $60.000 CLP (Alta Gama &amp; Vinos de Autor)</option>
-        <option value="over_60k">Más de $60.000 CLP (Vinos Ícono &amp; Culto)</option>
+        <option value="all" data-i18n="filter_price_all">Todos los Precios</option>
+        <option value="under_5k" data-i18n="filter_price_under_5k">Menos de $5.000 CLP (Económico Masivo)</option>
+        <option value="5k_12k" data-i18n="filter_price_5k_12k">$5.000 - $12.000 CLP (Reserva &amp; Supermercado)</option>
+        <option value="12k_25k" data-i18n="filter_price_12k_25k">$12.000 - $25.000 CLP (Gran Reserva / Clásicos)</option>
+        <option value="25k_60k" data-i18n="filter_price_25k_60k">$25.000 - $60.000 CLP (Alta Gama &amp; Vinos de Autor)</option>
+        <option value="over_60k" data-i18n="filter_price_over_60k">Más de $60.000 CLP (Vinos Ícono &amp; Culto)</option>
       </select>
     </div>
 
     <div class="filter-group">
-      <label class="filter-label" for="filter-style">Estilo / Segmento</label>
+      <label class="filter-label" for="filter-style" data-i18n="filter_style_lbl">Estilo / Segmento</label>
       <select id="filter-style" class="filter-select">
-        <option value="all">Todos los Estilos</option>
-        <option value="Ícono / Vino de Culto">🏆 Íconos &amp; Vinos de Culto</option>
-        <option value="Gran Reserva / Premium">⭐ Gran Reserva &amp; Premium</option>
-        <option value="Patrimonial / Natural / MOVI">🌿 Patrimoniales, Campesinos &amp; MOVI</option>
-        <option value="Supermercado &amp; Botillería Masivo">🛒 Supermercados &amp; Botillerías Populares</option>
-        <option value="Espumantes Chilenos">🥂 Espumantes con D.O.</option>
-        <option value="Clima Extremo / Desierto">🌵 Clima Extremo / Desierto</option>
+        <option value="all" data-i18n="filter_style_all">Todos los Estilos</option>
+        <option value="Ícono / Vino de Culto" data-i18n="chip_icons">🏆 Íconos &amp; Vinos de Culto</option>
+        <option value="Gran Reserva / Premium" data-i18n="chip_gran_reserva">⭐ Gran Reserva &amp; Premium</option>
+        <option value="Patrimonial / Natural / MOVI" data-i18n="chip_patrimonial">🌿 Patrimoniales, Campesinos &amp; MOVI</option>
+        <option value="Supermercado &amp; Botillería Masivo" data-i18n="chip_supermarket">🛒 Supermercados &amp; Botillerías Populares</option>
+        <option value="Espumantes Chilenos" data-i18n="chip_sparkling">🥂 Espumantes con D.O.</option>
+        <option value="Clima Extremo / Desierto" data-i18n="chip_desert">🌵 Clima Extremo / Desierto</option>
       </select>
     </div>
 
     <div class="filter-group">
-      <label class="filter-label" for="filter-valley">Valle Vitivinícola</label>
+      <label class="filter-label" for="filter-valley" data-i18n="filter_valley_lbl">Valle Vitivinícola</label>
       <select id="filter-valley" class="filter-select">
         <!-- Poblado dinámicamente -->
       </select>
     </div>
 
     <div class="filter-group">
-      <label class="filter-label" for="filter-grape">Cepa / Variedad</label>
+      <label class="filter-label" for="filter-grape" data-i18n="filter_grape_lbl">Cepa / Variedad</label>
       <select id="filter-grape" class="filter-select">
         <!-- Poblado dinámicamente -->
       </select>
     </div>
 
     <div class="filter-group">
-      <label class="filter-label" for="filter-type">Tipo de Vino</label>
+      <label class="filter-label" for="filter-type" data-i18n="filter_type_lbl">Tipo de Vino</label>
       <select id="filter-type" class="filter-select">
-        <option value="all">Todos los Tipos</option>
-        <option value="Tinto">Tinto</option>
-        <option value="Blanco">Blanco</option>
-        <option value="Naranjo">Naranjo</option>
-        <option value="Espumante">Espumante</option>
+        <option value="all" data-i18n="filter_type_all">Todos los Tipos</option>
+        <option value="Tinto" data-i18n="filter_type_red">Tinto</option>
+        <option value="Blanco" data-i18n="filter_type_white">Blanco</option>
+        <option value="Rosé" data-i18n="filter_type_rose">Rosé</option>
+        <option value="Espumante" data-i18n="filter_type_sparkling">Espumante</option>
       </select>
     </div>
 
     <div class="filter-group">
-      <label class="filter-label" for="filter-score">Puntaje Mínimo de Críticos</label>
+      <label class="filter-label" for="filter-score" data-i18n="filter_score_lbl">Puntaje Mínimo de Críticos</label>
       <select id="filter-score" class="filter-select">
-        <option value="0">Cualquier Puntaje</option>
-        <option value="90">90+ Puntos (Excelente)</option>
-        <option value="94">94+ Puntos (Sobresaliente)</option>
-        <option value="96">96+ Puntos (Extraordinario)</option>
-        <option value="98">98-100 Puntos (Ícono Supremo)</option>
+        <option value="0" data-i18n="filter_score_any">Cualquier Puntaje</option>
+        <option value="90" data-i18n="filter_score_90">90+ Puntos (Excelente)</option>
+        <option value="93" data-i18n="filter_score_93">93+ Puntos (Sobresaliente)</option>
+        <option value="95" data-i18n="filter_score_95">95+ Puntos (Excepcional)</option>
       </select>
     </div>
 
     <div class="filter-group">
       <label class="checkbox-label">
         <input type="checkbox" id="filter-organic">
-        <span>🌿 Orgánico / Biodinámico / Natural</span>
+        <span data-i18n="filter_organic_lbl">🌿 Solo Orgánico / Biodinámico / Natural</span>
       </label>
     </div>
 
     <div class="filter-group">
       <label class="checkbox-label">
         <input type="checkbox" id="filter-favorites">
-        <span>⭐ Solo Vinos Guardados en Favoritos</span>
+        <span data-i18n="filter_favorites_lbl">⭐ Solo Mis Favoritos</span>
       </label>
     </div>
 
     <div class="mt-4">
       <button class="btn btn-primary btn-block mb-2"
-        onclick="document.getElementById('filters-drawer').classList.remove('active')">
+        onclick="document.getElementById('filters-drawer').classList.remove('active')"
+        data-i18n="filter_drawer_title">
         Aplicar Filtros
       </button>
-      <button class="btn btn-secondary btn-block" onclick="App.resetFilters()">
+      <button class="btn btn-secondary btn-block" onclick="App.resetFilters()" data-i18n="reset_filters_btn">
         Restablecer Todo
       </button>
     </div>
@@ -481,15 +484,15 @@
        ========================================================================== -->
   <div id="compare-floating-bar" class="compare-floating-bar">
     <span class="compare-count-badge" id="compare-count">0</span>
-    <span style="font-size: 0.85rem; font-weight: 600; color: #FFF;">Vinos en Comparador</span>
-    <button class="btn btn-sm btn-primary" onclick="CompareEngine.openCompareModal()">Comparar →</button>
-    <button class="btn btn-sm btn-secondary" onclick="CompareEngine.clearCompare()">Limpiar</button>
+    <span style="font-size: 0.85rem; font-weight: 600; color: #FFF;" data-i18n="compare_bar_selected">Vinos en Comparador</span>
+    <button class="btn btn-sm btn-primary" onclick="CompareEngine.openCompareModal()" data-i18n="compare_bar_btn">Comparar →</button>
+    <button class="btn btn-sm btn-secondary" onclick="CompareEngine.clearCompare()" data-i18n="compare_bar_clear">Limpiar</button>
   </div>
 
   <div id="compare-modal" class="modal-overlay" role="dialog" aria-modal="true">
     <div class="modal-content-sheet" style="max-width: 1000px;">
       <div class="modal-sheet-header">
-        <h3 class="font-serif text-gold" style="font-size: 1.15rem;">⚖️ Comparador Frente a Frente</h3>
+        <h3 class="font-serif text-gold" style="font-size: 1.15rem;" data-i18n="compare_modal_title">⚖️ Comparador Frente a Frente</h3>
         <button id="close-compare-modal-btn" class="modal-close-btn" aria-label="Cerrar">&times;</button>
       </div>
       <div id="compare-table-container" class="modal-scrollable-body">
@@ -504,32 +507,35 @@
   <nav class="mobile-bottom-nav" aria-label="Navegación Móvil Inferior">
     <button class="nav-tab-btn active" data-nav-tab="catalog">
       <span class="nav-tab-icon">🍷</span>
-      <span class="nav-tab-label">Vinos</span>
+      <span class="nav-tab-label" data-i18n="nav_mobile_wines">Vinos</span>
     </button>
     <button class="nav-tab-btn" data-nav-tab="map">
       <span class="nav-tab-icon">🗺️</span>
-      <span class="nav-tab-label">Valles</span>
+      <span class="nav-tab-label" data-i18n="nav_mobile_valleys">Valles</span>
     </button>
     <button class="nav-tab-btn" data-nav-tab="varieties">
       <span class="nav-tab-icon">🍇</span>
-      <span class="nav-tab-label">Cepas</span>
+      <span class="nav-tab-label" data-i18n="nav_mobile_grapes">Cepas</span>
     </button>
     <button class="nav-tab-btn" data-nav-tab="sommelier">
       <span class="nav-tab-icon">🤵</span>
-      <span class="nav-tab-label">Sommelier</span>
+      <span class="nav-tab-label" data-i18n="nav_mobile_sommelier">Sommelier</span>
     </button>
     <button class="nav-tab-btn" data-nav-tab="scores">
       <span class="nav-tab-icon">🏆</span>
-      <span class="nav-tab-label">Puntajes</span>
+      <span class="nav-tab-label" data-i18n="nav_mobile_scores">Puntajes</span>
     </button>
     <button class="nav-tab-btn" data-nav-tab="producers">
       <span class="nav-tab-icon">🏰</span>
-      <span class="nav-tab-label">Viñas</span>
+      <span class="nav-tab-label" data-i18n="nav_mobile_producers">Viñas</span>
     </button>
   </nav>
 
   <!-- Notificaciones Toast -->
   <div id="app-toast" class="app-toast"></div>
+
+  <!-- Sistema de Internacionalización Multilingüe (i18n) -->
+  <script src="js/i18n.js"></script>
 
   <!-- Scripts de Datos -->
   <script src="js/data/valleys.js"></script>

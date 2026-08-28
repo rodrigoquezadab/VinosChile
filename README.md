@@ -4,6 +4,7 @@
 [![Valles D.O.](https://img.shields.io/badge/Valles%20D.O.-17%20Regiones-D4AF37.svg)](#-los-17-valles-vitivinícolas-georreferenciados)
 [![Viñas Chilenas](https://img.shields.io/badge/Vi%C3%B1as%20%26%20Bodegas-29%20Productores-4A0E17.svg)](#-directorio-de-viñas-bodegas-y-dónde-comprar)
 [![Cepas Oficiales](https://img.shields.io/badge/B%C3%B3veda%20de%20Cepas-17%20Variedades-2E7D32.svg)](#-bóveda-de-cepas-y-variedades-de-uva)
+[![i18n](https://img.shields.io/badge/i18n-8%20Idiomas%20(ES%20EN%20FR%20PT%20IT%20ZH%20JA%20HI)-blueviolet.svg)](#-soporte-multilingüe-internacional-i18n)
 [![Licencia](https://img.shields.io/badge/Licencia-MIT-blue.svg)](LICENSE)
 
 > **Terruño Chileno** es una plataforma web interactiva de clase mundial diseñada para que consumidores, amantes del vino, sommeliers y turistas exploren, comparen y descubran el fascinante universo del vino chileno. Desde los legendarios vinos ícono de 100 puntos en Maipo Alto y Apalta, hasta los vinos patrimoniales campesinos en tinajas de greda de Itata y Bío Bío, pasando por las líneas Gran Reserva más premiadas, los espumantes de método tradicional y los vinos masivos de supermercado y botillería preferidos por los chilenos.
@@ -80,6 +81,19 @@ Compara simultáneamente hasta 3 vinos en pantalla:
 
 ### 🛒 6. Dónde Comprar en Chile
 Ficha de disponibilidad comercial para cada etiqueta indicando supermercados (Jumbo, Líder), botillerías mayoristas (El Cielo), tiendas especializadas (Supermercados Diez, La CAV, El Mundo del Vino, La Vinoteca, Santiago Wine Club) y plataformas e-commerce con despacho a todo el país (Booz.cl, Descorcha.com).
+
+### 🌐 7. Soporte Multilingüe Internacional (i18n — 8 Idiomas)
+La plataforma cuenta con un motor de internacionalización nativo y reactivo que permite a consumidores, sommeliers y turistas de todo el mundo explorar los vinos de Chile en su lengua materna:
+- 🇨🇱 **Español** (`es` — Idioma Base)
+- 🇬🇧 **English** (`en`)
+- 🇫🇷 **Français** (`fr`)
+- 🇧🇷 **Português** (`pt`)
+- 🇮🇹 **Italiano** (`it`)
+- 🇨🇳 **中文** (`zh` — 简体中文)
+- 🇯🇵 **日本語** (`ja`)
+- 🇮🇳 **हिन्दी** (`hi`)
+
+Con conmutación instantánea sin recarga de página, selector visual con banderas en la barra superior y persistencia automática en `localStorage`.
 
 ---
 

@@ -69,7 +69,8 @@ const CompareEngine = {
       App.showToast("Vino removido del comparador");
     } else {
       if (this.comparedWineIds.length >= 3) {
-        App.showToast("Puedes comparar un máximo de 3 vinos a la vez", "warning");
+        const msg = typeof I18n !== "undefined" ? I18n.t("toast_compare_max") : "Puedes comparar un máximo de 3 vinos a la vez";
+        App.showToast(msg, "warning");
         return;
       }
       this.comparedWineIds.push(wineId);

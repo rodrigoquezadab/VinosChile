@@ -19,6 +19,9 @@ const App = {
   },
 
   init() {
+    if (typeof I18n !== "undefined") {
+      I18n.init();
+    }
     this.bindNavigation();
     this.bindSearchAndFilters();
     this.bindCategoryChips();
@@ -95,15 +98,23 @@ const App = {
   },
 
   updateCategoryChipCounts() {
+    const styleKeyMap = {
+      "all": "chip_all",
+      "Ícono / Vino de Culto": "chip_icons",
+      "Gran Reserva / Premium": "chip_gran_reserva",
+      "Patrimonial / Natural / MOVI": "chip_patrimonial",
+      "Supermercado & Botillería Masivo": "chip_supermarket",
+      "Espumantes Chilenos": "chip_sparkling",
+      "Clima Extremo / Desierto": "chip_desert"
+    };
+
     const chipBtns = document.querySelectorAll(".category-chip-btn");
     chipBtns.forEach((btn) => {
       const style = btn.getAttribute("data-style-filter");
       const count = style === "all" ? WINES_DATA.length : WINES_DATA.filter((w) => w.style === style).length;
-      let label = btn.getAttribute("data-label");
-      if (!label) {
-        label = btn.textContent.trim();
-        btn.setAttribute("data-label", label);
-      }
+      const i18nKey = styleKeyMap[style];
+      const label = (typeof I18n !== "undefined" && i18nKey) ? I18n.t(i18nKey) : btn.getAttribute("data-label") || btn.textContent.trim();
+      btn.setAttribute("data-label", label);
       btn.innerHTML = `${label} <span class="chip-count-pill">${count}</span>`;
     });
   },
@@ -218,15 +229,17 @@ const App = {
   populateFilterDropdowns() {
     const valleySelect = document.getElementById("filter-valley");
     if (valleySelect) {
+      const allValleysLabel = typeof I18n !== "undefined" ? I18n.t("filter_valley_all") : "Todos los Valles";
       const valleys = [...new Set(VALLEYS_DATA.map((v) => v.name))];
-      valleySelect.innerHTML = `<option value="all">Todos los Valles</option>` +
+      valleySelect.innerHTML = `<option value="all">${allValleysLabel}</option>` +
         valleys.map((v) => `<option value="${v}">${v}</option>`).join("");
     }
 
     const grapeSelect = document.getElementById("filter-grape");
     if (grapeSelect) {
+      const allGrapesLabel = typeof I18n !== "undefined" ? I18n.t("filter_grape_all") : "Todas las Cepas";
       const grapes = [...new Set(VARIETIES_DATA.map((g) => g.name))];
-      grapeSelect.innerHTML = `<option value="all">Todas las Cepas</option>` +
+      grapeSelect.innerHTML = `<option value="all">${allGrapesLabel}</option>` +
         grapes.map((g) => `<option value="${g}">${g}</option>`).join("");
     }
   },
@@ -371,15 +384,16 @@ const App = {
     if (!container) return;
 
     const filtered = this.getFilteredWines();
-    if (countEl) countEl.textContent = `${filtered.length} vinos encontrados`;
+    const suffix = typeof I18n !== "undefined" ? I18n.t("results_count_suffix") : "vinos encontrados";
+    if (countEl) countEl.textContent = `${filtered.length} ${suffix}`;
 
     if (filtered.length === 0) {
       container.innerHTML = `
         <div class="empty-state glass-panel">
           <span class="empty-icon">🍇</span>
-          <h3>No se encontraron vinos</h3>
-          <p>Prueba ajustando los filtros de búsqueda o restablece los criterios de precio y estilo.</p>
-          <button class="btn btn-primary mt-3" onclick="App.resetFilters()">Restablecer Filtros</button>
+          <h3>${typeof I18n !== "undefined" ? I18n.t("no_results_title") : "No se encontraron vinos"}</h3>
+          <p>${typeof I18n !== "undefined" ? I18n.t("no_results_desc") : "Prueba ajustando los filtros de búsqueda o restablece los criterios de precio y estilo."}</p>
+          <button class="btn btn-primary mt-3" onclick="App.resetFilters()">${typeof I18n !== "undefined" ? I18n.t("reset_filters_btn") : "Restablecer Filtros"}</button>
         </div>
       `;
       return;
@@ -389,6 +403,11 @@ const App = {
       const isFav = CompareEngine.isFavorite(wine.id);
       const inComp = CompareEngine.isInCompare(wine.id);
       const storesSnippet = wine.availableAt ? wine.availableAt.slice(0, 3).join(" • ") : "Supermercados & Tiendas";
+      const whereBuyLabel = typeof I18n !== "undefined" ? I18n.t("card_where_buy") : "Dónde Comprar:";
+      const compareLabel = inComp 
+        ? (typeof I18n !== "undefined" ? "✓ " + I18n.t("card_comparing") : "✓ Comparando")
+        : (typeof I18n !== "undefined" ? "+ " + I18n.t("card_compare") : "+ Comparar");
+      const detailsLabel = typeof I18n !== "undefined" ? I18n.t("card_view_details") : "Ver Ficha & Cata";
 
       return `
         <article class="wine-card glass-panel" data-wine-id="${wine.id}">
@@ -426,7 +445,7 @@ const App = {
               </div>
 
               <div class="wine-retail-tag-line">
-                <span>🛒 <strong>Dónde Comprar:</strong> ${storesSnippet}</span>
+                <span>🛒 <strong>${whereBuyLabel}</strong> ${storesSnippet}</span>
               </div>
             </div>
           </div>
@@ -445,10 +464,10 @@ const App = {
             
             <div class="d-flex gap-2">
               <button class="btn btn-sm btn-outline-gold ${inComp ? 'active' : ''}" onclick="event.stopPropagation(); CompareEngine.toggleCompare('${wine.id}')">
-                ${inComp ? '✓ Comparando' : '+ Comparar'}
+                ${compareLabel}
               </button>
               <button class="btn btn-sm btn-primary" onclick="App.openWineModal('${wine.id}')">
-                Ver Ficha &amp; Cata →
+                ${detailsLabel} →
               </button>
             </div>
           </div>
@@ -517,7 +536,7 @@ const App = {
 
         <!-- Rango de Precio Hero en Modal -->
         <div class="wine-modal-price-hero-strip mt-2">
-          <span class="price-hero-label">💵 Rango de Precio de Mercado:</span>
+          <span class="price-hero-label">💵 ${typeof I18n !== "undefined" ? I18n.t("modal_market_price") : "Rango de Precio de Mercado:"}</span>
           <strong class="price-hero-amount">${wine.priceTier}</strong>
         </div>
       </div>
@@ -533,8 +552,8 @@ const App = {
 
         <!-- Dónde Comprar, Supermercados y Canales de Distribución -->
         <div class="retail-stores-showcase-box glass-panel mb-4">
-          <h4 class="box-title">🛒 Dónde Comprar en Chile (Supermercados, Tiendas & Botillerías)</h4>
-          <p class="text-light-muted mb-2" style="font-size: 0.85rem;">Encuentra este vino en los siguientes canales de distribución autorizados:</p>
+          <h4 class="box-title">🛒 ${typeof I18n !== "undefined" ? I18n.t("modal_where_title") : "Dónde Comprar en Chile (Supermercados, Tiendas & Botillerías)"}</h4>
+          <p class="text-light-muted mb-2" style="font-size: 0.85rem;">${typeof I18n !== "undefined" ? I18n.t("modal_where_sub") : "Encuentra este vino en los siguientes canales de distribución autorizados:"}</p>
           <div class="stores-badges-grid mb-3">
             ${wine.availableAt ? wine.availableAt.map((s) => `
               <div class="store-badge-card">
@@ -550,14 +569,14 @@ const App = {
               <h3 class="text-gold mb-0 font-bold">${wine.priceTier}</h3>
             </div>
             <a href="${wine.sellerLink}" target="_blank" rel="noopener" class="btn btn-sm btn-primary">
-              Sitio Oficial de la Viña ↗
+              ${typeof I18n !== "undefined" ? I18n.t("modal_online_store") : "Sitio Oficial de la Viña"} ↗
             </a>
           </div>
         </div>
 
         <!-- Puntajes Internacionales -->
         <div class="scores-summary-box glass-panel mb-4">
-          <h4 class="box-title">🏆 Puntajes & Reconocimientos Internacionales</h4>
+          <h4 class="box-title">🏆 ${typeof I18n !== "undefined" ? I18n.t("modal_critic_scores") : "Puntajes & Reconocimientos Internacionales"}</h4>
           <div class="scores-pills-grid">
             <div class="score-pill-item">
               <span class="pill-name">James Suckling</span>
@@ -590,41 +609,41 @@ const App = {
         </div>
 
         <!-- Notas Organolépticas y Cata -->
-        <h4 class="section-subheading">👃 Notas de Cata del Sommelier</h4>
+        <h4 class="section-subheading">👃 ${typeof I18n !== "undefined" ? I18n.t("modal_tasting_notes_title") : "Notas de Cata del Sommelier"}</h4>
         <p class="tasting-notes-full leading-relaxed mb-4">${wine.tastingNotes}</p>
 
         <!-- Radar / Barras de Perfil Organoléptico -->
         <div class="sensory-bars-container glass-panel mb-4">
-          <h4 class="box-title">📊 Perfil Sensorial en Boca</h4>
+          <h4 class="box-title">📊 ${typeof I18n !== "undefined" ? I18n.t("modal_radar_title") : "Perfil Sensorial en Boca"}</h4>
           <div class="sensory-bar-row">
-            <span class="sensory-label">Intensidad Aromática</span>
+            <span class="sensory-label">${typeof I18n !== "undefined" ? I18n.t("radar_aroma") : "Intensidad Aromática"}</span>
             <div class="sensory-progress-bar"><div class="progress-fill" style="width: ${wine.tastingRadar.aroma}%;"></div></div>
             <span class="sensory-value">${wine.tastingRadar.aroma}%</span>
           </div>
           <div class="sensory-bar-row">
-            <span class="sensory-label">Cuerpo & Estructura</span>
+            <span class="sensory-label">${typeof I18n !== "undefined" ? I18n.t("radar_body") : "Cuerpo & Estructura"}</span>
             <div class="sensory-progress-bar"><div class="progress-fill" style="width: ${wine.tastingRadar.body}%;"></div></div>
             <span class="sensory-value">${wine.tastingRadar.body}%</span>
           </div>
           <div class="sensory-bar-row">
-            <span class="sensory-label">Taninos & Textura</span>
+            <span class="sensory-label">${typeof I18n !== "undefined" ? I18n.t("radar_tannins") : "Taninos & Textura"}</span>
             <div class="sensory-progress-bar"><div class="progress-fill" style="width: ${wine.tastingRadar.tannins}%;"></div></div>
             <span class="sensory-value">${wine.tastingRadar.tannins}%</span>
           </div>
           <div class="sensory-bar-row">
-            <span class="sensory-label">Acidez & Frescura</span>
+            <span class="sensory-label">${typeof I18n !== "undefined" ? I18n.t("radar_acidity") : "Acidez & Frescura"}</span>
             <div class="sensory-progress-bar"><div class="progress-fill" style="width: ${wine.tastingRadar.acidity}%;"></div></div>
             <span class="sensory-value">${wine.tastingRadar.acidity}%</span>
           </div>
           <div class="sensory-bar-row">
-            <span class="sensory-label">Persistencia / Final</span>
+            <span class="sensory-label">${typeof I18n !== "undefined" ? I18n.t("radar_finish") : "Persistencia / Final"}</span>
             <div class="sensory-progress-bar"><div class="progress-fill" style="width: ${wine.tastingRadar.finish}%;"></div></div>
             <span class="sensory-value">${wine.tastingRadar.finish}%</span>
           </div>
         </div>
 
         <!-- Ficha Enológica -->
-        <h4 class="section-subheading">🧪 Ficha Técnica Enológica</h4>
+        <h4 class="section-subheading">🧪 ${typeof I18n !== "undefined" ? I18n.t("modal_tech_title") : "Ficha Técnica Enológica"}</h4>
         <div class="specs-grid mb-4">
           <div class="spec-card">
             <span class="spec-label">Composición / Blend</span>
@@ -643,7 +662,7 @@ const App = {
             <span class="spec-value">${wine.aging}</span>
           </div>
           <div class="spec-card">
-            <span class="spec-label">Potencial de Guarda</span>
+            <span class="spec-label">${typeof I18n !== "undefined" ? I18n.t("modal_potential") : "Potencial de Guarda"}</span>
             <span class="spec-value">${wine.agingPotential}</span>
           </div>
           <div class="spec-card">
@@ -653,22 +672,22 @@ const App = {
         </div>
 
         <!-- Guía de Servicio y Maridaje -->
-        <h4 class="section-subheading">🍽️ Servicio & Maridaje Recomendado</h4>
+        <h4 class="section-subheading">🍽️ ${typeof I18n !== "undefined" ? I18n.t("modal_service_title") : "Servicio & Maridaje Recomendado"}</h4>
         <div class="service-box glass-panel mb-4">
           <div class="service-item-row">
-            <strong>🌡️ Temperatura Óptima de Servicio:</strong>
+            <strong>🌡️ ${typeof I18n !== "undefined" ? I18n.t("modal_serving_temp") : "Temperatura Óptima:"}</strong>
             <span class="text-gold font-bold">${wine.servingTemp}</span>
           </div>
           <div class="service-item-row">
-            <strong>⏳ Tiempo de Decantación:</strong>
+            <strong>⏳ ${typeof I18n !== "undefined" ? I18n.t("modal_decant_time") : "Tiempo de Decantación:"}</strong>
             <span>${wine.decantTime}</span>
           </div>
           <div class="service-item-row">
-            <strong>🍷 Cristalería Adecuada:</strong>
+            <strong>🍷 ${typeof I18n !== "undefined" ? I18n.t("modal_glassware") : "Cristalería Adecuada:"}</strong>
             <span>${wine.glassware}</span>
           </div>
           <div class="service-item-row">
-            <strong>🥩 Maridajes Sugeridos:</strong>
+            <strong>🥩 ${typeof I18n !== "undefined" ? I18n.t("modal_pairings_title") : "Maridajes Sugeridos:"}</strong>
             <div class="d-flex flex-wrap gap-1 mt-1">
               ${wine.pairings.map((p) => `<span class="badge badge-wine">${p}</span>`).join("")}
             </div>
@@ -681,7 +700,7 @@ const App = {
             ${inComp ? 'Quitar del Comparador' : 'Añadir al Comparador Lado a Lado'}
           </button>
           <button class="btn btn-outline-gold btn-block" onclick="App.closeWineModal()">
-            Cerrar Ficha
+            ${typeof I18n !== "undefined" ? I18n.t("modal_close") : "Cerrar"}
           </button>
         </div>
       </div>
