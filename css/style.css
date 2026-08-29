@@ -1795,13 +1795,228 @@ a:hover {
 }
 
 /* ==========================================================================
-   COMPARADOR - LAYOUT DOS PANELES
-   Panel izquierdo fijo (etiquetas) + Panel derecho scrollable (vinos)
-   Las alturas de cada fila se sincronizan via valores fijos en JS (ROW_H)
+   COMPARADOR - Layout simple: todo scrollea junto en X
    ========================================================================== */
 
-/* ── Contenedor principal: flex horizontal, se expande al contenido ── */
-.cmp-layout {
+/* El contenedor ya tiene overflow-x:auto via #compare-table-container override */
+
+/* Tabla: flex horizontal que se expande al ancho real del contenido */
+.cmp-table {
+  display: flex;
+  width: max-content; /* ancho real = suma de columnas */
+  font-family: var(--font-sans);
+}
+
+/* Base de columna */
+.cmp-col {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+/* Columna de etiquetas */
+.cmp-lbl {
+  width: 130px;
+  background: #0F0C14;
+  border-right: 2px solid rgba(212,175,55,0.22);
+}
+
+/* Columna de vino */
+.cmp-wcol {
+  width: 200px;
+  border-right: 1px solid var(--border-subtle);
+}
+.cmp-wcol:last-child { border-right: none; }
+
+/* Celda base — texto no desborda */
+.cmp-cell {
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+  overflow: hidden;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.cmp-col:last-child .cmp-cell:last-child { border-bottom: none; }
+
+/* Celda cabecera (label col) */
+.cmp-hdr-cell {
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+  background: linear-gradient(135deg, rgba(90,20,32,0.55) 0%, rgba(15,12,20,1) 100%);
+  border-bottom: 2px solid rgba(212,175,55,0.25);
+}
+
+.cmp-hdr-ico { font-size: 1.3rem; }
+.cmp-hdr-txt {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Separador de sección */
+.cmp-sec-cell {
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--gold-primary);
+  background: rgba(212,175,55,0.07);
+  border-top: 1px solid rgba(212,175,55,0.18);
+  border-bottom: 1px solid rgba(212,175,55,0.07);
+  gap: 0.35rem;
+}
+
+/* Vacío en columnas de vino para el separador */
+.cmp-sec-blank {
+  background: rgba(212,175,55,0.04);
+  border-top: 1px solid rgba(212,175,55,0.14);
+}
+
+/* Celda de etiqueta normal */
+.cmp-lbl .cmp-cell:not(.cmp-hdr-cell):not(.cmp-sec-cell) {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  line-height: 1.25;
+}
+
+/* Cabecera de vino */
+.cmp-whdr {
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.15rem;
+  padding: 0.6rem 0.75rem 0.6rem 0.9rem;
+  background: linear-gradient(135deg, rgba(90,20,32,0.4) 0%, rgba(15,12,20,0.9) 100%);
+  border-bottom: 2px solid rgba(212,175,55,0.22);
+  position: relative;
+}
+
+/* Acciones (favorito / quitar) */
+.cmp-wactions {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  display: flex;
+  gap: 0.2rem;
+}
+
+.cmp-fav-btn, .cmp-rm-btn {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: rgba(255,255,255,0.06);
+  cursor: pointer;
+  font-size: 0.75rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition-fast);
+  color: var(--text-muted);
+}
+
+.cmp-fav-btn:hover  { background: rgba(212,175,55,0.2); border-color: var(--gold-primary); color: var(--gold-primary); }
+.cmp-fav-btn.is-fav { color: var(--gold-primary); border-color: var(--gold-primary); background: rgba(212,175,55,0.12); }
+.cmp-rm-btn:hover   { background: rgba(158,43,62,0.25); border-color: var(--wine-bright); color: #fff; }
+
+/* Tipografía de cabecera de vino */
+.cmp-wname {
+  font-family: var(--font-serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.2;
+  padding-right: 3rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.cmp-wmeta   { font-size: 0.67rem; color: var(--gold-primary); font-weight: 600; }
+.cmp-wwinery { font-size: 0.67rem; color: var(--text-muted); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+/* Imagen de botella */
+.cmp-img-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cmp-img-wrap img {
+  max-height: 130px;
+  max-width: 90%;
+  width: auto;
+  border-radius: 7px;
+  border: 1px solid var(--border-glass);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  transition: transform var(--transition-smooth);
+}
+
+.cmp-img-wrap img:hover { transform: scale(1.07); }
+
+/* Valores de texto */
+.v-main { font-size: 0.82rem; font-weight: 600; color: var(--text-main); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.v-sub  { font-size: 0.75rem; color: var(--text-muted); line-height: 1.35; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.v-gold { font-size: 0.82rem; font-weight: 600; color: var(--gold-primary); }
+
+/* Puntaje máximo */
+.cmp-top {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--gold-primary);
+  display: flex;
+  align-items: baseline;
+  gap: 0.15rem;
+  line-height: 1;
+}
+.cmp-top small { font-size: 0.65rem; font-weight: 400; color: var(--text-muted); font-family: var(--font-sans); }
+
+/* Barras de score */
+.cmp-bar-wrap { display: flex; align-items: center; gap: 0.45rem; width: 100%; }
+.cmp-bar-num  { font-size: 0.84rem; font-weight: 700; min-width: 24px; font-family: var(--font-serif); flex-shrink: 0; }
+.cmp-bar      { flex: 1; height: 5px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden; min-width: 0; }
+.cmp-bar-fill { height: 100%; border-radius: 99px; transition: width 0.7s cubic-bezier(0.16,1,0.3,1); }
+.cmp-na       { color: var(--text-dim); font-size: 0.78rem; }
+
+/* Badge de precio */
+.cmp-price {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: 0.76rem; font-weight: 700; letter-spacing: 0.05em;
+  border: 1px solid currentColor;
+}
+.pt1 { color: #78c17a; background: rgba(120,193,122,0.12); }
+.pt2 { color: #D4AF37; background: rgba(212,175,55,0.12); }
+.pt3 { color: #C87941; background: rgba(200,121,65,0.12); }
+.pt4 { color: #E880B0; background: rgba(232,128,176,0.12); }
+
+/* Modal más ancho */
+.compare-modal-sheet { max-width: 1100px !important; }
+
+.compare-modal-header {
+  background: linear-gradient(135deg, rgba(20,14,26,0.95) 0%, rgba(40,28,52,0.95) 100%);
+  border-bottom: 1px solid var(--border-glass) !important;
+  padding: 0.85rem 1.5rem !important;
+}
+
+.compare-modal-title-wrap { display: flex; align-items: center; gap: 0.75rem; }
+.compare-modal-icon { font-size: 1.5rem; filter: drop-shadow(0 0 8px rgba(212,175,55,0.4)); }
+
+/* Legado */
+.remove-compare-item-btn { position: absolute; top: 4px; right: 4px; background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+.score-highlight { font-family: var(--font-serif); font-size: 1.1rem; font-weight: 700; color: var(--gold-primary); }
+
+
   display: flex;
   min-width: max-content; /* permite que el padre scrollee en X */
   font-family: var(--font-sans);

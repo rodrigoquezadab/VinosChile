@@ -1,19 +1,17 @@
 ﻿/**
  * Terruño Chileno - Módulo de Comparación de Vinos y Gestión de Favoritos
- * Comparación lado a lado de 2 o 3 vinos con fotografías reales, atributos enológicos, puntajes y terroir.
- * Layout: panel de etiquetas fijo a la izquierda + área de vinos con scroll horizontal independiente.
+ * Layout: columnas flex con alturas fijas sincronizadas. Todo scrollea junto.
  */
 const CompareEngine = {
   comparedWineIds: [],
   favoriteIds: [],
 
-  // Alturas sincronizadas entre panel de etiquetas y panel de vinos
   ROW_H: {
-    header:  90,   // px - cabecera con nombre del vino
-    divider: 34,   // px - separador de sección
-    bottle:  160,  // px - fila de imagen de botella
-    normal:  52,   // px - fila estándar
-    score:   44,   // px - fila con barra de score
+    header:  90,
+    divider: 34,
+    bottle:  160,
+    normal:  52,
+    score:   46,
   },
 
   init() {
@@ -23,55 +21,42 @@ const CompareEngine = {
   },
 
   bindEvents() {
-    const compareModal = document.getElementById("compare-modal");
+    const modal = document.getElementById("compare-modal");
     const closeBtn = document.getElementById("close-compare-modal-btn");
     if (closeBtn) closeBtn.addEventListener("click", () => this.closeCompareModal());
-    if (compareModal) {
-      compareModal.addEventListener("click", (e) => {
-        if (e.target === compareModal) this.closeCompareModal();
-      });
-    }
+    if (modal) modal.addEventListener("click", (e) => { if (e.target === modal) this.closeCompareModal(); });
   },
 
   loadFavorites() {
-    try {
-      const saved = localStorage.getItem("terruno_favorites");
-      this.favoriteIds = saved ? JSON.parse(saved) : [];
-    } catch (e) { this.favoriteIds = []; }
+    try { this.favoriteIds = JSON.parse(localStorage.getItem("terruno_favorites") || "[]"); }
+    catch (e) { this.favoriteIds = []; }
   },
 
   saveFavorites() {
-    try {
-      localStorage.setItem("terruno_favorites", JSON.stringify(this.favoriteIds));
-    } catch (e) { console.warn("No se pudo guardar en localStorage", e); }
+    try { localStorage.setItem("terruno_favorites", JSON.stringify(this.favoriteIds)); }
+    catch (e) {}
   },
 
   toggleFavorite(wineId) {
-    const index = this.favoriteIds.indexOf(wineId);
-    let added = false;
-    if (index > -1) {
-      this.favoriteIds.splice(index, 1);
-    } else {
-      this.favoriteIds.push(wineId);
-      added = true;
-    }
+    const i = this.favoriteIds.indexOf(wineId);
+    const added = i === -1;
+    if (added) this.favoriteIds.push(wineId); else this.favoriteIds.splice(i, 1);
     this.saveFavorites();
     App.updateWineCardFavorites();
-    App.showToast(added ? "Añadido a tus Vinos Guardados" : "Removido de tus favoritos");
+    App.showToast(added ? "Guardado en favoritos" : "Removido de favoritos");
     this.openCompareModal();
   },
 
   isFavorite(wineId) { return this.favoriteIds.includes(wineId); },
 
   toggleCompare(wineId) {
-    const index = this.comparedWineIds.indexOf(wineId);
-    if (index > -1) {
-      this.comparedWineIds.splice(index, 1);
+    const i = this.comparedWineIds.indexOf(wineId);
+    if (i > -1) {
+      this.comparedWineIds.splice(i, 1);
       App.showToast("Vino removido del comparador");
     } else {
       if (this.comparedWineIds.length >= 3) {
-        const msg = typeof I18n !== "undefined" ? I18n.t("toast_compare_max") : "Puedes comparar un máximo de 3 vinos a la vez";
-        App.showToast(msg, "warning");
+        App.showToast(typeof I18n !== "undefined" ? I18n.t("toast_compare_max") : "Máximo 3 vinos", "warning");
         return;
       }
       this.comparedWineIds.push(wineId);
@@ -91,24 +76,22 @@ const CompareEngine = {
 
   updateCompareFloatingBar() {
     const bar = document.getElementById("compare-floating-bar");
-    const countEl = document.getElementById("compare-count");
-    if (!bar || !countEl) return;
-    countEl.textContent = this.comparedWineIds.length;
-    if (this.comparedWineIds.length > 0) bar.classList.add("visible");
-    else bar.classList.remove("visible");
+    const cnt = document.getElementById("compare-count");
+    if (!bar || !cnt) return;
+    cnt.textContent = this.comparedWineIds.length;
+    bar.classList.toggle("visible", this.comparedWineIds.length > 0);
   },
 
   _scoreBar(score) {
-    if (!score || score === "N/A" || score === 0) return '<span class="cmp-score-na">—</span>';
+    if (!score || score === "N/A" || score === 0) return '<span class="cmp-na">—</span>';
     const pct = Math.max(0, Math.min(100, Math.round(((score - 80) / 20) * 100)));
-    const color = score >= 97 ? "#F0C040" : score >= 94 ? "#D4AF37" : score >= 90 ? "#C87941" : "#9E9E9E";
-    return '<div class="cmp-score-bar-wrap"><span class="cmp-score-num" style="color:' + color + '">' + score + '</span><div class="cmp-score-bar"><div class="cmp-score-fill" style="width:' + pct + '%;background:' + color + ';"></div></div></div>';
+    const c = score >= 97 ? "#F0C040" : score >= 94 ? "#D4AF37" : score >= 90 ? "#C87941" : "#9E9E9E";
+    return '<div class="cmp-bar-wrap"><span class="cmp-bar-num" style="color:' + c + '">' + score + '</span><div class="cmp-bar"><div class="cmp-bar-fill" style="width:' + pct + '%;background:' + c + ';"></div></div></div>';
   },
 
   _priceBadge(tier) {
-    const map = { "$": "price-tier-1", "$$": "price-tier-2", "$$$": "price-tier-3", "$$$$": "price-tier-4" };
-    const cls = map[tier] || "price-tier-2";
-    return '<span class="cmp-price-badge ' + cls + '">' + (tier || "—") + '</span>';
+    const m = { "$": "pt1", "$$": "pt2", "$$$": "pt3", "$$$$": "pt4" };
+    return '<span class="cmp-price ' + (m[tier] || "pt2") + '">' + (tier || "—") + '</span>';
   },
 
   openCompareModal() {
@@ -116,7 +99,7 @@ const CompareEngine = {
       App.showToast("Selecciona al menos 2 vinos para comparar", "warning");
       return;
     }
-    const wines = this.comparedWineIds.map((id) => WINES_DATA.find((w) => w.id === id)).filter(Boolean);
+    const wines = this.comparedWineIds.map(id => WINES_DATA.find(w => w.id === id)).filter(Boolean);
     const modal = document.getElementById("compare-modal");
     const container = document.getElementById("compare-table-container");
     if (!modal || !container) return;
@@ -124,125 +107,83 @@ const CompareEngine = {
     const self = this;
     const H = this.ROW_H;
 
-    // Definición de secciones y filas
+    // Definición de secciones
     const sections = [
-      {
-        key: "BOTELLA", label: "Botella", emoji: "🍾",
-        rows: [
-          { label: "Etiqueta", type: "bottle",
-            render: function(w) { return '<div class="cmp-bottle-wrap"><img class="cmp-bottle-img" src="' + w.bottleImage + '" alt="' + w.name + '" onerror="this.src=\'assets/images/wines/almaviva.jpg\'"></div>'; }
-          }
-        ]
-      },
-      {
-        key: "TERROIR", label: "Terroir", emoji: "🗺️",
-        rows: [
-          { label: "Viña",         type: "normal", render: function(w) { return '<span class="cmp-val-main">' + w.winery + '</span>'; } },
-          { label: "Valle / D.O.", type: "normal", render: function(w) { return '<span class="cmp-val-main">' + w.valleyName + '</span>'; } },
-          { label: "Zona",         type: "normal", render: function(w) { return '<span class="badge badge-gold">' + w.zone + '</span>'; } },
-          { label: "Añada",        type: "normal", render: function(w) { return '<span class="cmp-val-main">' + w.vintage + '</span>'; } }
-        ]
-      },
-      {
-        key: "ENOLOGIA", label: "Enología", emoji: "🍷",
-        rows: [
-          { label: "Variedad",  type: "normal", render: function(w) { return '<span class="cmp-val-sub">' + w.blend + '</span>'; } },
-          { label: "Categoría", type: "normal", render: function(w) { return '<span class="badge badge-subtle">' + w.category + '</span>'; } },
-          { label: "Alcohol",   type: "normal", render: function(w) { return '<span class="cmp-val-main">' + w.alcohol + '</span>'; } },
-          { label: "Crianza",   type: "normal", render: function(w) { return '<span class="cmp-val-sub">' + w.aging + '</span>'; } },
-          { label: "Guarda",    type: "normal", render: function(w) { return '<span class="cmp-val-main">' + w.agingPotential + '</span>'; } }
-        ]
-      },
-      {
-        key: "PUNTUACIONES", label: "Puntuaciones", emoji: "🏅",
-        rows: [
-          { label: "Puntaje Máx.",   type: "normal", render: function(w) { return '<span class="cmp-top-score">' + w.topScore + '<small>pts</small></span>'; } },
-          { label: "James Suckling", type: "score",  render: function(w) { return self._scoreBar(w.scores.jamesSuckling); } },
-          { label: "Descorchados",   type: "score",  render: function(w) { return self._scoreBar(w.scores.descorchados); } },
-          { label: "Robert Parker",  type: "score",  render: function(w) { return self._scoreBar(w.scores.robertParker); } }
-        ]
-      },
-      {
-        key: "SERVICIO", label: "Servicio", emoji: "🍽️",
-        rows: [
-          { label: "Temperatura", type: "normal", render: function(w) { return '<span class="cmp-val-gold">' + w.servingTemp + '</span>'; } },
-          { label: "Decantación", type: "normal", render: function(w) { return '<span class="cmp-val-sub">' + w.decantTime + '</span>'; } },
-          { label: "Maridaje",    type: "normal", render: function(w) { return '<span class="cmp-val-sub">' + w.pairings.slice(0, 2).join(" · ") + '</span>'; } },
-          { label: "Precio",      type: "normal", render: function(w) { return self._priceBadge(w.priceTier); } }
-        ]
-      }
+      { title: "🍾 Botella", rows: [
+        { label: "Etiqueta", h: "bottle",
+          render: w => '<div class="cmp-img-wrap"><img src="' + w.bottleImage + '" alt="' + w.name + '" onerror="this.src=\'assets/images/wines/almaviva.jpg\'"></div>' }
+      ]},
+      { title: "🗺️ Terroir", rows: [
+        { label: "Viña",         h: "normal", render: w => '<span class="v-main">' + w.winery + '</span>' },
+        { label: "Valle / D.O.", h: "normal", render: w => '<span class="v-main">' + w.valleyName + '</span>' },
+        { label: "Zona",         h: "normal", render: w => '<span class="badge badge-gold">' + w.zone + '</span>' },
+        { label: "Añada",        h: "normal", render: w => '<span class="v-main">' + w.vintage + '</span>' }
+      ]},
+      { title: "🍷 Enología", rows: [
+        { label: "Variedad",  h: "normal", render: w => '<span class="v-sub">' + w.blend + '</span>' },
+        { label: "Categoría", h: "normal", render: w => '<span class="badge badge-subtle">' + w.category + '</span>' },
+        { label: "Alcohol",   h: "normal", render: w => '<span class="v-main">' + w.alcohol + '</span>' },
+        { label: "Crianza",   h: "normal", render: w => '<span class="v-sub">' + w.aging + '</span>' },
+        { label: "Guarda",    h: "normal", render: w => '<span class="v-main">' + w.agingPotential + '</span>' }
+      ]},
+      { title: "🏅 Puntuaciones", rows: [
+        { label: "Puntaje Máx.",   h: "normal", render: w => '<span class="cmp-top">' + w.topScore + '<small>pts</small></span>' },
+        { label: "James Suckling", h: "score",  render: w => self._scoreBar(w.scores.jamesSuckling) },
+        { label: "Descorchados",   h: "score",  render: w => self._scoreBar(w.scores.descorchados) },
+        { label: "Robert Parker",  h: "score",  render: w => self._scoreBar(w.scores.robertParker) }
+      ]},
+      { title: "🍽️ Servicio", rows: [
+        { label: "Temperatura", h: "normal", render: w => '<span class="v-gold">' + w.servingTemp + '</span>' },
+        { label: "Decantación", h: "normal", render: w => '<span class="v-sub">' + w.decantTime + '</span>' },
+        { label: "Maridaje",    h: "normal", render: w => '<span class="v-sub">' + w.pairings.slice(0,2).join(" · ") + '</span>' },
+        { label: "Precio",      h: "normal", render: w => self._priceBadge(w.priceTier) }
+      ]}
     ];
 
-    // ─── Panel izquierdo: solo etiquetas ─────────────────────────────────
-    let labelsHtml = '';
-    // Celda cabecera del panel de etiquetas
-    labelsHtml += '<div class="cmp-lp-header" style="height:' + H.header + 'px;">';
-    labelsHtml += '<span class="cmp-header-icon">⚖️</span><span>Atributo</span>';
-    labelsHtml += '</div>';
-
+    // ── Columna de etiquetas ──────────────────────────────────────────
+    let labelCol = '<div class="cmp-col cmp-lbl">';
+    labelCol += '<div class="cmp-cell cmp-hdr-cell" style="height:' + H.header + 'px"><span class="cmp-hdr-ico">⚖️</span><span class="cmp-hdr-txt">Atributo</span></div>';
     sections.forEach(function(sec) {
-      // Separador de sección
-      labelsHtml += '<div class="cmp-lp-divider" style="height:' + H.divider + 'px;">';
-      labelsHtml += '<span>' + sec.emoji + '</span>' + sec.label;
-      labelsHtml += '</div>';
-      // Filas de la sección
+      labelCol += '<div class="cmp-cell cmp-sec-cell" style="height:' + H.divider + 'px">' + sec.title + '</div>';
       sec.rows.forEach(function(row) {
-        var h = H[row.type] || H.normal;
-        labelsHtml += '<div class="cmp-lp-cell" style="height:' + h + 'px;">' + row.label + '</div>';
+        labelCol += '<div class="cmp-cell" style="height:' + H[row.h] + 'px">' + row.label + '</div>';
       });
     });
+    labelCol += '</div>';
 
-    // ─── Panel derecho: columnas de vinos (scrollable) ────────────────────
-    let winesHtml = '';
+    // ── Columnas de vinos ─────────────────────────────────────────────
+    let wineCols = '';
     wines.forEach(function(w) {
       const isFav = self.isFavorite(w.id);
-      let colHtml = '<div class="cmp-wine-col">';
-
-      // Cabecera del vino
-      colHtml += '<div class="cmp-wc-header" style="height:' + H.header + 'px;">';
-      colHtml += '<div class="cmp-wine-actions">';
-      colHtml += '<button class="cmp-fav-btn' + (isFav ? " is-fav" : "") + '" title="' + (isFav ? "Quitar favorito" : "Guardar") + '" onclick="CompareEngine.toggleFavorite(\'' + w.id + '\')">' + (isFav ? "⭐" : "☆") + '</button>';
-      colHtml += '<button class="cmp-remove-btn" title="Quitar" onclick="CompareEngine.toggleCompare(\'' + w.id + '\');if(CompareEngine.comparedWineIds.length>=2){CompareEngine.openCompareModal();}else{CompareEngine.closeCompareModal();}">✕</button>';
-      colHtml += '</div>';
-      colHtml += '<div class="cmp-wine-name">' + w.name + '</div>';
-      colHtml += '<div class="cmp-wine-meta">' + w.vintage + ' &middot; ' + w.category + '</div>';
-      colHtml += '<div class="cmp-wine-winery">' + w.winery + '</div>';
-      colHtml += '</div>';
-
+      let col = '<div class="cmp-col cmp-wcol">';
+      // Cabecera
+      col += '<div class="cmp-cell cmp-whdr" style="height:' + H.header + 'px">';
+      col += '<div class="cmp-wactions">';
+      col += '<button class="cmp-fav-btn' + (isFav ? " is-fav" : "") + '" onclick="CompareEngine.toggleFavorite(\'' + w.id + '\')">' + (isFav ? "⭐" : "☆") + '</button>';
+      col += '<button class="cmp-rm-btn" onclick="CompareEngine.toggleCompare(\'' + w.id + '\');if(CompareEngine.comparedWineIds.length>=2){CompareEngine.openCompareModal();}else{CompareEngine.closeCompareModal();}">✕</button>';
+      col += '</div>';
+      col += '<div class="cmp-wname">' + w.name + '</div>';
+      col += '<div class="cmp-wmeta">' + w.vintage + ' · ' + w.category + '</div>';
+      col += '<div class="cmp-wwinery">' + w.winery + '</div>';
+      col += '</div>';
+      // Filas de sección
       sections.forEach(function(sec) {
-        // Separador (vacío, solo altura)
-        colHtml += '<div class="cmp-wc-divider" style="height:' + H.divider + 'px;"></div>';
-        // Celdas de datos
+        col += '<div class="cmp-cell cmp-sec-cell cmp-sec-blank" style="height:' + H.divider + 'px"></div>';
         sec.rows.forEach(function(row) {
-          var h = H[row.type] || H.normal;
-          colHtml += '<div class="cmp-wc-cell" style="height:' + h + 'px;">' + row.render(w) + '</div>';
+          col += '<div class="cmp-cell" style="height:' + H[row.h] + 'px">' + row.render(w) + '</div>';
         });
       });
-
-      colHtml += '</div>';
-      winesHtml += colHtml;
+      col += '</div>';
+      wineCols += col;
     });
 
-    // ─── Ensamblado final ─────────────────────────────────────────────────
-    container.innerHTML =
-      '<div class="cmp-layout">' +
-        '<div class="cmp-label-pane">' + labelsHtml + '</div>' +
-        '<div class="cmp-wines-pane">' +
-          '<div class="cmp-wines-inner" style="--cmp-cols:' + wines.length + ';">' +
-            winesHtml +
-          '</div>' +
-        '</div>' +
-      '</div>';
-
+    container.innerHTML = '<div class="cmp-table">' + labelCol + wineCols + '</div>';
     modal.classList.add("active");
     document.body.style.overflow = "hidden";
   },
 
   closeCompareModal() {
     const modal = document.getElementById("compare-modal");
-    if (modal) {
-      modal.classList.remove("active");
-      document.body.style.overflow = "";
-    }
+    if (modal) { modal.classList.remove("active"); document.body.style.overflow = ""; }
   }
 };
